@@ -4,6 +4,24 @@
     <Filter Include="system">
       <UniqueIdentifier>{22dd8095-74f9-46df-81a1-36675a040b1f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="system\BackGround">
+      <UniqueIdentifier>{3c01b3f7-2edb-42b9-8484-981bcc546863}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="system\Game">
+      <UniqueIdentifier>{6d24a71d-6919-4015-a91f-00046209bc93}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="system\Player">
+      <UniqueIdentifier>{b9c11719-3b78-400c-9353-c7a865d478ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="system\GameCamera">
+      <UniqueIdentifier>{f01043c8-a847-4a28-8681-40d412eeb5e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="system\Enemy">
+      <UniqueIdentifier>{ebde239b-4c62-4c7b-ab4d-2e1b669e0bfa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="system\Bullet">
+      <UniqueIdentifier>{d792666a-da0b-4d17-8a37-7ce8ccedcca5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -11,13 +29,47 @@
     <ClCompile Include="system\system.cpp">
       <Filter>system</Filter>
     </ClCompile>
-    <ClCompile Include="Game.cpp" />
+    <ClCompile Include="BackGround.cpp">
+      <Filter>system\BackGround</Filter>
+    </ClCompile>
+    <ClCompile Include="Game.cpp">
+      <Filter>system\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>system\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="GameCamera.cpp">
+      <Filter>system\GameCamera</Filter>
+    </ClCompile>
+    <ClCompile Include="Enemy.cpp">
+      <Filter>system\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Bullet.cpp">
+      <Filter>system\Bullet</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="system\system.h">
       <Filter>system</Filter>
     </ClInclude>
-    <ClInclude Include="Game.h" />
+    <ClInclude Include="BackGround.h">
+      <Filter>system\BackGround</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.h">
+      <Filter>system\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>system\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="GameCamera.h">
+      <Filter>system\GameCamera</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy.h">
+      <Filter>system\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Bullet.h">
+      <Filter>system\Bullet</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
