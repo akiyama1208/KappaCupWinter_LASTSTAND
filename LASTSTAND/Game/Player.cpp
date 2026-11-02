@@ -14,7 +14,9 @@ Player::Player()
 	//ユニティちゃんのモデルを読み込む
 	m_modelRender.Init("Assets/modelData/unityChan.tkm", animationClips, enAnimationClip_Num, enModelUpAxisY);
 	//キャラコンを初期化する
-	characterController.Init(25.0f, 75.0f, position);
+	characterController.Init(40.0f, 75.0f, position);
+	// 弾数表示の位置
+	m_ammoFontRender.SetPosition(Vector3(400.0f, -300.0f, 0.0f));
 }
 
 Player::~Player()
@@ -45,6 +47,16 @@ void Player::Update()
 	ManageState();
 	//アニメーションの再生
 	PlayAnimation();
+	// 弾数表示を更新
+	wchar_t ammoText[64];
+	swprintf_s(
+		ammoText,
+		64,
+		L"AMMO: %d / %d",
+		m_ammo,
+		m_maxAmmo
+	);
+	m_ammoFontRender.SetText(ammoText);
 
 	//絵描きさんの更新処理
 	m_modelRender.Update();
@@ -224,4 +236,7 @@ void Player::RecoverAmmo(int amount)
 void Player::Render(RenderContext& rc)
 {
 	m_modelRender.Draw(rc);
+
+	// 弾数を描画
+	m_ammoFontRender.Draw(rc);
 }

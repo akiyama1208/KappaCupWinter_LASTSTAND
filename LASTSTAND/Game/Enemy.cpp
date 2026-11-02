@@ -1,32 +1,80 @@
 #include "stdafx.h"
 #include "Enemy.h"
+#include "Player.h"
 
 bool Enemy::Start()
 {
     m_position = Vector3(0.0f, 0.0f, 5000.0f);
     m_moveSpeed = Vector3(0.0f, 0.0f, 0.0f);
 
+    // プレイヤーを取得
+    m_player = FindGO<Player>("player");
+
     // 敵モデルを読み込む
     m_modelRender.Init("Assets/modelData/enemy/enemy.tkm");
     m_modelRender.SetPosition(m_position);
     m_modelRender.Update();
 
-    // 敵の当たり判定を初期化
-    m_characterController.Init(80.0f, 200.0f, m_position);
+    // 当たり判定を初期化
+    m_characterController.Init(125.0f, 200.0f, m_position);
 
     return true;
 }
 
 void Enemy::Update()
 {
-    m_position = m_characterController.Execute(m_moveSpeed,1.0f / 60.0f);
+    // プレイヤーがいなければ処理を終了
+    if (m_player == nullptr)
+    {
+        return;
+    }
+
+    // プレイヤーとの方向を計算
+    Vector3 direction = m_player->position - m_position;
+    direction.y = 0.0f;
+
+    // 追跡を開始する距離
+    float distance = direction.Length();
+    float detectionRange = 1500.0f;
+
+    // 一定距離以内なら追いかける
+    if (distance <= detectionRange && distance > 300.0f)
+    {
+        direction.Normalize();
+        m_moveSpeed = direction * m_moveSpeedValue;
+    }
+    else
+    {
+        // 遠いとき、または十分に近いときは停止
+        m_moveSpeed = Vector3(0.0f, 0.0f, 0.0f);
+    }
+
+    m_position = m_characterController.Execute(
+        m_moveSpeed,
+        1.0f / 60.0f
+    );
 
     m_modelRender.SetPosition(m_position);
-
     m_modelRender.Update();
 }
 
 void Enemy::Render(RenderContext& rc)
 {
     m_modelRender.Draw(rc);
+}
+
+void Enemy::TakeDamage(int damage)
+{
+    m_hp -= damage;
+
+    char text[100];
+    sprintf_s(text, "Enemy HP: %d\n", m_hp);
+    OutputDebugStringA(text);
+
+    if (m_hp <= 0)
+    {
+        m_hp = 0;
+        OutputDebugStringA("Enemy deleted\n");
+        DeleteGO(this);
+    }
 }

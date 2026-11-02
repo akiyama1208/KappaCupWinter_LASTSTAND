@@ -24,6 +24,7 @@ public:
 
 	//メンバ変数
 	ModelRender m_modelRender;
+	FontRender m_ammoFontRender;
 	Vector3 position;
 	enum EnAnimationClip
 	{
