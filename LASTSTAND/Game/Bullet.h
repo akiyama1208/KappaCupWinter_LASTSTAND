@@ -1,4 +1,5 @@
 #pragma once
+#include "physics/SphereCollider.h"
 
 class Bullet : public IGameObject
 {
@@ -32,5 +33,6 @@ private:
     float m_lifeTime = 1.0f;
     // 経過時間
     float m_elapsedTime = 0.0f;
+    nsK2EngineLow::SphereCollider m_collider;
 };
 
