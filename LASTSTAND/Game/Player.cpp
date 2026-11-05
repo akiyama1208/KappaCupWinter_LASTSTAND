@@ -22,6 +22,20 @@ Player::Player()
 	m_hpFontRender.SetPosition(Vector3(-400.0f, 300.0f, 0.0f));
 }
 
+bool Player::Start()
+{
+	// プレイヤー弾を30発生成
+	for (int i = 0; i < BULLET_POOL_SIZE; i++)
+	{
+		m_bulletPool[i] = NewGO<Bullet>(0, "bullet");
+
+		// 弾の初期化
+		m_bulletPool[i]->InitPool();
+	}
+
+	return true;
+}
+
 Player::~Player()
 {
 
@@ -224,11 +238,24 @@ void Player::Shoot()
 		return;
 	}
 
-	// 次の射撃まで0.2秒待つ
-	m_shootCooldown = 0.2f;
+	// 未使用の弾を探す
+	Bullet* bullet = nullptr;
 
-	// 弾数を1発消費
-	m_ammo--;
+	for (int i = 0; i < BULLET_POOL_SIZE; i++)
+	{
+		if (m_bulletPool[i] != nullptr &&
+			m_bulletPool[i]->IsActive() == false)
+		{
+			bullet = m_bulletPool[i];
+			break;
+		}
+	}
+
+	// 使用できる弾がなければ発射しない
+	if (bullet == nullptr)
+	{
+		return;
+	}
 
 	// プレイヤーが向いている方向を取得
 	Vector3 direction = Vector3::AxisZ;
@@ -238,16 +265,19 @@ void Player::Shoot()
 	direction.y = 0.0f;
 	direction.Normalize();
 
-	// 弾の発射位置を設定
+	// 弾の発射位置
 	Vector3 bulletPosition = position;
 	bulletPosition.y += 60.0f;
 	bulletPosition += direction * 100.0f;
 
-	// 弾を生成
-	Bullet* bullet = NewGO<Bullet>(0, "bullet");
+	// 弾を再利用
+	bullet->Activate(bulletPosition, direction);
 
-	// 弾の位置と方向を設定
-	bullet->Init(bulletPosition, direction);
+	// 次の射撃まで0.2秒待つ
+	m_shootCooldown = 0.2f;
+
+	// 弾数を1発消費
+	m_ammo--;
 }
 
 void Player::RecoverAmmo(int amount)

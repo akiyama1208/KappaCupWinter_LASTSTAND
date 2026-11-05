@@ -1,5 +1,7 @@
 #pragma once
 
+class Bullet;
+
 class Player : public IGameObject
 {
 public:
@@ -36,6 +38,8 @@ public:
 	void CheckEnemyCollision();
 	// 弾数を回復
 	void RecoverAmmo(int amount);
+	bool Start() override;
+
 
 	//メンバ変数
 	ModelRender m_modelRender;
@@ -62,5 +66,7 @@ public:
 	int m_maxHp = 100;
 	bool m_isGameOver = false;       // ゲームオーバー状態
 	float m_invincibleTimer = 0.0f;  // ダメージを受けた後の無敵時間
+	static const int BULLET_POOL_SIZE = 30; // プレイヤー弾のプール
+	Bullet* m_bulletPool[BULLET_POOL_SIZE] = {};
 };
 

@@ -11,31 +11,66 @@ Bullet::~Bullet()
 {
 }
 
-void Bullet::Init(const Vector3& position,const Vector3& direction)
+// プール用の初期化
+void Bullet::InitPool()
 {
-    // 発射位置を設定
-    m_position = position;
-
-    // 発射方向を設定
-    m_direction = direction;
-    m_direction.Normalize();
+    if (m_isInitialized)
+    {
+        return;
+    }
 
     m_collider.Create(10.0f);
 
     m_modelRender.Init("Assets/modelData/bullet/bullet.tkm");
+
+    m_isInitialized = true;
+    m_isActive = false;
+}
+
+// 弾を発射する
+void Bullet::Activate(const Vector3& position, const Vector3& direction)
+{
+    if (!m_isInitialized)
+    {
+        return;
+    }
+
+    m_position = position;
+    m_direction = direction;
+    m_direction.Normalize();
+
+    // 寿命をリセット
+    m_elapsedTime = 0.0f;
+
+    // 弾を有効化
+    m_isActive = true;
+
     m_modelRender.SetPosition(m_position);
     m_modelRender.Update();
 }
 
+// 弾を使用停止にする
+void Bullet::Deactivate()
+{
+    m_isActive = false;
+}
+
 void Bullet::Update()
 {
+    // 使用中でなければ何もしない
+    if (!m_isActive)
+    {
+        return;
+    }
+
     const float deltaTime = 1.0f / 60.0f;
 
     m_elapsedTime += deltaTime;
 
+    // 寿命が切れたら再利用可能にする
     if (m_elapsedTime >= m_lifeTime)
     {
-        DeleteGO(this);
+        Deactivate();
         return;
     }
 
@@ -63,13 +98,14 @@ void Bullet::Update()
 
         Vector3 closestPosition = oldPosition + move * t;
 
-        // 敵のカプセル半径125 + 弾の半径10
+        // 敵の半径125 + 弾の半径10
         if ((enemy->GetPosition() - closestPosition).Length() < 135.0f)
         {
             OutputDebugStringA("Bullet hit!\n");
 
             enemy->TakeDamage(25);
-            DeleteGO(this);
+
+            Deactivate();
             return;
         }
     }
@@ -79,16 +115,23 @@ void Bullet::Update()
 
     if (PhysicsWorld::GetInstance()->RayTest(oldPosition, newPosition, hitPos))
     {
-        DeleteGO(this);
+        Deactivate();
         return;
     }
 
     m_position = newPosition;
+
     m_modelRender.SetPosition(m_position);
     m_modelRender.Update();
 }
 
 void Bullet::Render(RenderContext& rc)
 {
+    // 使用中の弾だけ描画
+    if (!m_isActive)
+    {
+        return;
+    }
+
     m_modelRender.Draw(rc);
 }

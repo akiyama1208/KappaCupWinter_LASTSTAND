@@ -7,13 +7,21 @@ public:
     Bullet();
     ~Bullet();
 
-    // 弾の初期化
-    void Init(const Vector3& position, const Vector3& direction);
+    // プール用の初期化
+    void InitPool();
+    // 弾を発射可能な状態にする
+    void Activate(const Vector3& position, const Vector3& direction);
+    // 弾を使用停止にする
+    void Deactivate();
     // 更新処理
     void Update();
     // 描画処理
     void Render(RenderContext& rc);
-
+    // 使用中かどうか
+    bool IsActive() const
+    {
+        return m_isActive;
+    }
     // 弾の位置を取得
     const Vector3& GetPosition() const
     {
@@ -21,18 +29,17 @@ public:
     }
 
 private:
-    // 弾のモデル
     ModelRender m_modelRender;
-    // 弾の位置
+
     Vector3 m_position;
-    // 弾の進行方向
     Vector3 m_direction;
-    // 弾の速度
+
     float m_speed = 3000.0f;
-    // 弾の寿命
     float m_lifeTime = 1.0f;
-    // 経過時間
     float m_elapsedTime = 0.0f;
+
+    bool m_isActive = false;
+    bool m_isInitialized = false;
+
     nsK2EngineLow::SphereCollider m_collider;
 };
-
