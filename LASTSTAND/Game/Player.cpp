@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Player.h"
 #include "Bullet.h"
+#include "Enemy.h"
 
 Player::Player()
 {
@@ -17,6 +18,8 @@ Player::Player()
 	characterController.Init(40.0f, 75.0f, position);
 	// 弾数表示の位置
 	m_ammoFontRender.SetPosition(Vector3(400.0f, -300.0f, 0.0f));
+	// HP表示の位置
+	m_hpFontRender.SetPosition(Vector3(-400.0f, 300.0f, 0.0f));
 }
 
 Player::~Player()
@@ -26,8 +29,22 @@ Player::~Player()
 
 void Player::Update()
 {
+	// ゲームオーバーならプレイヤーの処理を停止
+	if (m_isGameOver)
+	{
+		return;
+	}
+
 	//移動処理
 	Move();
+	// 無敵時間を更新
+	if (m_invincibleTimer > 0.0f)
+	{
+		m_invincibleTimer -= 1.0f / 60.0f;
+	}
+
+	// 敵との接触判定
+	CheckEnemyCollision();
 	//回転処理
 	Rotation();
 	// 射撃間隔を更新
@@ -57,6 +74,17 @@ void Player::Update()
 		m_maxAmmo
 	);
 	m_ammoFontRender.SetText(ammoText);
+
+	// HP表示を更新
+	wchar_t hpText[64];
+	swprintf_s(
+		hpText,
+		64,
+		L"HP: %d / %d",
+		m_hp,
+		m_maxHp
+	);
+	m_hpFontRender.SetText(hpText);
 
 	//絵描きさんの更新処理
 	m_modelRender.Update();
@@ -233,10 +261,66 @@ void Player::RecoverAmmo(int amount)
 	}
 }
 
+void Player::CheckEnemyCollision()
+{
+	Enemy* enemy = FindGO<Enemy>("enemy");
+
+	if (enemy == nullptr)
+	{
+		return;
+	}
+
+	Vector3 distance = enemy->GetPosition() - position;
+	distance.y = 0.0f;
+
+	if (distance.Length() < 300.0f)
+	{
+		TakeDamage(25);
+	}
+}
+
+void Player::TakeDamage(int damage)
+{
+	// ゲームオーバーならダメージを受けない
+	if (m_isGameOver)
+	{
+		return;
+	}
+
+	// 無敵時間中ならダメージを受けない
+	if (m_invincibleTimer > 0.0f)
+	{
+		return;
+	}
+
+	// HPを減らす
+	m_hp -= damage;
+
+	// HPが0以下になったら
+	if (m_hp <= 0)
+	{
+		m_hp = 0;
+		m_isGameOver = true;
+
+		OutputDebugStringA("GAME OVER!\n");
+		return;
+	}
+
+	// 1秒間無敵にする
+	m_invincibleTimer = 1.0f;
+
+	char text[100];
+	sprintf_s(text, "Player HP: %d\n", m_hp);
+	OutputDebugStringA(text);
+}
+
 void Player::Render(RenderContext& rc)
 {
 	m_modelRender.Draw(rc);
 
 	// 弾数を描画
 	m_ammoFontRender.Draw(rc);
+
+	// HPを描画
+	m_hpFontRender.Draw(rc);
 }

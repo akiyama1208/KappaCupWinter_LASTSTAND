@@ -19,12 +19,28 @@ public:
 	void PlayAnimation();
 	// 射撃処理
 	void Shoot();
+	// ダメージ処理
+	void TakeDamage(int damage);
+	// 現在のHPを取得
+	int GetHP() const
+	{
+		return m_hp;
+	}
+
+	// ゲームオーバー状態を取得
+	bool IsGameOver() const
+	{
+		return m_isGameOver;
+	}
+	// 敵との接触判定
+	void CheckEnemyCollision();
 	// 弾数を回復
 	void RecoverAmmo(int amount);
 
 	//メンバ変数
 	ModelRender m_modelRender;
 	FontRender m_ammoFontRender;
+	FontRender m_hpFontRender;
 	Vector3 position;
 	enum EnAnimationClip
 	{
@@ -39,8 +55,12 @@ public:
 	Quaternion rotation;
 	int playerState = 0;
 	float m_shootCooldown = 0.0f;
-	int m_ammo = 30;       // 現在の弾数
-	int m_maxAmmo = 30;    // 最大弾数
-	int m_ammoRecovery = 10; // 回復する弾数
+	int m_ammo = 30;                 // 現在の弾数
+	int m_maxAmmo = 30;              // 最大弾数
+	int m_ammoRecovery = 10;         // 回復する弾数
+	int m_hp = 100;                  // プレイヤーのHP
+	int m_maxHp = 100;
+	bool m_isGameOver = false;       // ゲームオーバー状態
+	float m_invincibleTimer = 0.0f;  // ダメージを受けた後の無敵時間
 };
 

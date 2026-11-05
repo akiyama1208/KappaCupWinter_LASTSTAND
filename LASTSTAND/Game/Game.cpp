@@ -4,6 +4,7 @@
 #include "Player.h"
 #include "GameCamera.h"
 #include "Enemy.h" 
+#include "GameOver.h"
 
 Game::Game()
 {
@@ -30,7 +31,18 @@ Game::~Game()
 
 void Game::Update()
 {
-	
+    // すでにゲームオーバー画面が表示されている場合
+    if (m_gameOver != nullptr)
+    {
+        return;
+    }
+
+    // プレイヤーがゲームオーバーになったか確認
+    if (m_player->IsGameOver())
+    {
+        // ゲームオーバー画面を生成
+        m_gameOver = NewGO<GameOver>(0, "gameOver");
+    }
 }
 
 void Game::Render(RenderContext& rc)

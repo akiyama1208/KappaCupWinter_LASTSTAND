@@ -22,6 +22,9 @@
     <Filter Include="system\Bullet">
       <UniqueIdentifier>{d792666a-da0b-4d17-8a37-7ce8ccedcca5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="system\GameOver">
+      <UniqueIdentifier>{e9e4e502-59b5-49db-b13c-7fc5d3c4c284}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -47,6 +50,9 @@
     <ClCompile Include="Bullet.cpp">
       <Filter>system\Bullet</Filter>
     </ClCompile>
+    <ClCompile Include="GameOver.cpp">
+      <Filter>system\GameOver</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -70,6 +76,9 @@
     </ClInclude>
     <ClInclude Include="Bullet.h">
       <Filter>system\Bullet</Filter>
+    </ClInclude>
+    <ClInclude Include="GameOver.h">
+      <Filter>system\GameOver</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

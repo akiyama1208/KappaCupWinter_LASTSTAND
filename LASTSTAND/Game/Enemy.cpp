@@ -29,6 +29,12 @@ void Enemy::Update()
         return;
     }
 
+    // プレイヤーがゲームオーバーなら敵を停止
+    if (m_player->IsGameOver())
+    {
+        return;
+    }
+
     // プレイヤーとの方向を計算
     Vector3 direction = m_player->position - m_position;
     direction.y = 0.0f;

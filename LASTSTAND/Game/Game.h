@@ -6,6 +6,7 @@ class Player;
 class BackGround;
 class GameCamera;
 class Enemy;
+class GameOver;
 
 class Game : public IGameObject
 {
@@ -17,6 +18,7 @@ public:
 	void Render(RenderContext& rc);
 
 private:
+	GameOver* m_gameOver = nullptr;
 	Player* m_player;
 	BackGround* m_bg = nullptr;
 	GameCamera* m_gameCamera;
