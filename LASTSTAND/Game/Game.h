@@ -6,24 +6,29 @@ class Player;
 class BackGround;
 class GameCamera;
 class Enemy;
+class Enemy2;
 class GameOver;
 
 class Game : public IGameObject
 {
 public:
-	Game();
-	~Game();
-	bool Start();
-	void Update();
-	void Render(RenderContext& rc);
+    Game();
+    ~Game();
+
+    bool Start();
+    void Update();
+    void Render(RenderContext& rc);
 
 private:
-	GameOver* m_gameOver = nullptr;
-	Player* m_player;
-	BackGround* m_bg = nullptr;
-	GameCamera* m_gameCamera;
-	Enemy* m_enemy = nullptr;
-	ModelRender m_modelRender;
-	Vector3 m_pos;
-};
+    GameOver* m_gameOver = nullptr;
+    Player* m_player = nullptr;
+    BackGround* m_bg = nullptr;
+    GameCamera* m_gameCamera = nullptr;
 
+    // 敵
+    Enemy* m_enemy = nullptr;
+    Enemy2* m_enemy2 = nullptr;
+
+    ModelRender m_modelRender;
+    Vector3 m_pos;
+};

@@ -25,6 +25,9 @@
     <Filter Include="system\GameOver">
       <UniqueIdentifier>{e9e4e502-59b5-49db-b13c-7fc5d3c4c284}</UniqueIdentifier>
     </Filter>
+    <Filter Include="system\Enemy2">
+      <UniqueIdentifier>{05c70428-6b7a-4dfa-93e5-792236a5f298}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -53,6 +56,9 @@
     <ClCompile Include="GameOver.cpp">
       <Filter>system\GameOver</Filter>
     </ClCompile>
+    <ClCompile Include="Enemy2.cpp">
+      <Filter>system\Enemy2</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -79,6 +85,9 @@
     </ClInclude>
     <ClInclude Include="GameOver.h">
       <Filter>system\GameOver</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy2.h">
+      <Filter>system\Enemy2</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
