@@ -1,18 +1,22 @@
 #include "stdafx.h"
 #include "Enemy2.h"
 #include "Player.h"
+#include "EnemyBulletPool.h"
 
 bool Enemy2::Start()
 {
     // 初期位置
-    m_position = Vector3(4000.0f, 0.0f,500.0f);
+    m_position = Vector3(4000.0f, 0.0f, 500.0f);
 
     m_moveSpeed = Vector3(0.0f, 0.0f, 0.0f);
 
     // プレイヤーを取得
     m_player = FindGO<Player>("player");
 
-    // 2体目のモデルを読み込む
+    // 敵弾プールを取得
+    m_enemyBulletPool = FindGO<EnemyBulletPool>("enemyBulletPool");
+
+    // モデルを読み込む
     m_modelRender.Init("Assets/modelData/enemy2/enemy2.tkm");
     m_modelRender.SetPosition(m_position);
     m_modelRender.Update();
@@ -66,12 +70,43 @@ void Enemy2::Move()
     }
     else
     {
-        //1500以上離れていたら停止
+        // 遠い場合は停止
         m_moveSpeed = Vector3(0.0f, 0.0f, 0.0f);
     }
 }
 
 void Enemy2::Attack()
 {
-    // 攻撃処理は後で実装
+    // 敵弾プールがなければ攻撃しない
+    if (m_enemyBulletPool == nullptr)
+    {
+        return;
+    }
+
+    const float deltaTime = 1.0f / 60.0f;
+
+    // 攻撃タイマー
+    m_attackTimer += deltaTime;
+
+    if (m_attackTimer < m_attackInterval)
+    {
+        return;
+    }
+
+    // タイマーをリセット
+    m_attackTimer = 0.0f;
+
+    // 弾の発射位置
+    Vector3 bulletPosition = m_position;
+    bulletPosition.y += 100.0f;
+
+    // 発射位置からプレイヤーへの方向
+    Vector3 direction = m_player->position - bulletPosition;
+    direction.Normalize();
+
+    // 敵弾を発射
+    m_enemyBulletPool->Shoot(
+        bulletPosition,
+        direction
+    );
 }

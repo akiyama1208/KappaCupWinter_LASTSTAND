@@ -5,6 +5,7 @@
 #include "GameCamera.h"
 #include "Enemy.h"
 #include "Enemy2.h"
+#include "EnemyBulletPool.h"
 #include "GameOver.h"
 
 Game::Game()
@@ -19,6 +20,9 @@ bool Game::Start()
     m_bg = NewGO<BackGround>(0, "backGround");
 
     m_gameCamera = NewGO<GameCamera>(0, "gameCamera");
+
+    // 敵弾プールを生成
+    NewGO<EnemyBulletPool>(0, "enemyBulletPool");
 
     // 1体目の敵
     m_enemy = NewGO<Enemy>(0, "enemy");

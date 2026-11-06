@@ -331,17 +331,29 @@ void Player::TakeDamage(int damage)
 	{
 		m_hp = 0;
 		m_isGameOver = true;
-
-		OutputDebugStringA("GAME OVER!\n");
-		return;
+	}
+	else
+	{
+		// 1秒間無敵にする
+		m_invincibleTimer = 1.0f;
 	}
 
-	// 1秒間無敵にする
-	m_invincibleTimer = 1.0f;
+	// HP表示をその場で更新
+	wchar_t hpText[64];
+	swprintf_s(
+		hpText,
+		64,
+		L"HP: %d / %d",
+		m_hp,
+		m_maxHp
+	);
+	m_hpFontRender.SetText(hpText);
 
-	char text[100];
-	sprintf_s(text, "Player HP: %d\n", m_hp);
-	OutputDebugStringA(text);
+	// ゲームオーバー表示用ログ
+	if (m_isGameOver)
+	{
+		OutputDebugStringA("GAME OVER!\n");
+	}
 }
 
 void Player::Render(RenderContext& rc)

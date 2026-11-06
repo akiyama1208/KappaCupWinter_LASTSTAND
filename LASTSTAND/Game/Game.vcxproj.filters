@@ -28,6 +28,12 @@
     <Filter Include="system\Enemy2">
       <UniqueIdentifier>{05c70428-6b7a-4dfa-93e5-792236a5f298}</UniqueIdentifier>
     </Filter>
+    <Filter Include="system\EnemyBullet">
+      <UniqueIdentifier>{9194a990-f71b-4105-a725-86b0b6eccabd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="system\EnemyBulletPool">
+      <UniqueIdentifier>{9cf9afdc-5e8e-41ac-863e-e1ec51b023f9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -59,6 +65,12 @@
     <ClCompile Include="Enemy2.cpp">
       <Filter>system\Enemy2</Filter>
     </ClCompile>
+    <ClCompile Include="EnemyBullet.cpp">
+      <Filter>system\EnemyBullet</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyBulletPool.cpp">
+      <Filter>system\EnemyBulletPool</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -88,6 +100,12 @@
     </ClInclude>
     <ClInclude Include="Enemy2.h">
       <Filter>system\Enemy2</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyBullet.h">
+      <Filter>system\EnemyBullet</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyBulletPool.h">
+      <Filter>system\EnemyBulletPool</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
