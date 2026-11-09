@@ -18,6 +18,8 @@ bool Enemy::Start()
     // 当たり判定を初期化
     m_characterController.Init(125.0f, 200.0f, m_position);
 
+    m_hpFontRender.SetPosition(m_hpFontPosition);
+
     return true;
 }
 
@@ -67,20 +69,47 @@ void Enemy::Update()
 void Enemy::Render(RenderContext& rc)
 {
     m_modelRender.Draw(rc);
+
+    // 敵のHPを表示
+    wchar_t hpText[64];
+    swprintf_s(
+        hpText,
+        64,
+        L"%ls: %d / %d",
+        m_hpLabel,
+        m_hp,
+        m_maxHp
+    );
+
+    m_hpFontRender.SetPosition(m_hpFontPosition);
+    m_hpFontRender.SetText(hpText);
+    m_hpFontRender.Draw(rc);
 }
 
 void Enemy::TakeDamage(int damage)
 {
+    // すでに倒されていたら処理しない
+    if (m_hp <= 0)
+    {
+        return;
+    }
+
+    // HPを減らす
     m_hp -= damage;
 
-    char text[100];
-    sprintf_s(text, "Enemy HP: %d\n", m_hp);
-    OutputDebugStringA(text);
-
+    // HPが0以下になったら
     if (m_hp <= 0)
     {
         m_hp = 0;
+
         OutputDebugStringA("Enemy deleted\n");
+
         DeleteGO(this);
+        return;
     }
+
+    // HPをログに表示
+    char text[100];
+    sprintf_s(text, "Enemy HP: %d\n", m_hp);
+    OutputDebugStringA(text);
 }

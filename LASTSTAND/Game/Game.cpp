@@ -24,11 +24,8 @@ bool Game::Start()
     // 敵弾プールを生成
     NewGO<EnemyBulletPool>(0, "enemyBulletPool");
 
-    // 1体目の敵
+    // 1体目の敵だけ生成
     m_enemy = NewGO<Enemy>(0, "enemy");
-
-    // 2体目の敵
-    m_enemy2 = NewGO<Enemy2>(0, "enemy2");
 
     return true;
 }
@@ -48,8 +45,24 @@ void Game::Update()
     // プレイヤーがゲームオーバーになったか確認
     if (m_player->IsGameOver())
     {
-        // ゲームオーバー画面を生成
         m_gameOver = NewGO<GameOver>(0, "gameOver");
+        return;
+    }
+
+    // Enemy1が倒されたらEnemy2を生成
+    if (m_enemy == nullptr && !m_isEnemy2Spawned)
+    {
+        m_enemy2 = NewGO<Enemy2>(0, "enemy2");
+        m_isEnemy2Spawned = true;
+    }
+
+    // Enemy1が削除されたか確認
+    if (m_enemy != nullptr)
+    {
+        if (FindGO<Enemy>("enemy") == nullptr)
+        {
+            m_enemy = nullptr;
+        }
     }
 }
 

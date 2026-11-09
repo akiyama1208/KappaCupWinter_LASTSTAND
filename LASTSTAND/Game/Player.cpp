@@ -19,7 +19,7 @@ Player::Player()
 	// 弾数表示の位置
 	m_ammoFontRender.SetPosition(Vector3(400.0f, -300.0f, 0.0f));
 	// HP表示の位置
-	m_hpFontRender.SetPosition(Vector3(-400.0f, 300.0f, 0.0f));
+	m_hpFontRender.SetPosition(Vector3(-750.0f, 300.0f, 0.0f));
 }
 
 bool Player::Start()

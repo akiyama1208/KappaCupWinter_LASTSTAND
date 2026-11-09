@@ -98,13 +98,38 @@ void Bullet::Update()
 
         Vector3 closestPosition = oldPosition + move * t;
 
-        // 敵の半径125 + 弾の半径10
         if ((enemy->GetPosition() - closestPosition).Length() < 135.0f)
         {
-            OutputDebugStringA("Bullet hit!\n");
-
             enemy->TakeDamage(25);
+            Deactivate();
+            return;
+        }
+    }
 
+    // 敵2との当たり判定
+    Enemy* enemy2 = FindGO<Enemy>("enemy2");
+
+    if (enemy2 != nullptr)
+    {
+        Vector3 toEnemy = enemy2->GetPosition() - oldPosition;
+        Vector3 move = newPosition - oldPosition;
+
+        float moveLengthSq = move.Dot(move);
+        float t = 0.0f;
+
+        if (moveLengthSq > 0.0f)
+        {
+            t = toEnemy.Dot(move) / moveLengthSq;
+
+            if (t < 0.0f) t = 0.0f;
+            if (t > 1.0f) t = 1.0f;
+        }
+
+        Vector3 closestPosition = oldPosition + move * t;
+
+        if ((enemy2->GetPosition() - closestPosition).Length() < 135.0f)
+        {
+            enemy2->TakeDamage(25);
             Deactivate();
             return;
         }

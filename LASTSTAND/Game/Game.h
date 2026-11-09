@@ -29,6 +29,9 @@ private:
     Enemy* m_enemy = nullptr;
     Enemy2* m_enemy2 = nullptr;
 
+    // Enemy2の出現管理
+    bool m_isEnemy2Spawned = false;
+
     ModelRender m_modelRender;
     Vector3 m_pos;
 };

@@ -27,6 +27,15 @@ bool Enemy2::Start()
     // HP
     m_hp = 150;
 
+    m_hp = 150;
+    m_maxHp = 150;
+
+    // 敵2のHP表示位置
+    m_hpFontPosition = Vector3(-250.0f, 450.0f, 0.0f);
+
+    // HP表示名
+    m_hpLabel = L"ENEMY2 HP";
+
     return true;
 }
 
