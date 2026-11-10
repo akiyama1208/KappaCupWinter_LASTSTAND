@@ -3,8 +3,6 @@
 
 GameOver::GameOver()
 {
-    // GAME OVERの表示位置
-    m_fontRender.SetPosition(Vector3(0.0f, 0.0f, 0.0f));
 }
 
 GameOver::~GameOver()
@@ -13,20 +11,25 @@ GameOver::~GameOver()
 
 bool GameOver::Start()
 {
-    // ゲームオーバーの文字を設定
-    m_fontRender.SetText(L"GAME OVER");
-
-    // 文字の大きさ
-    m_fontRender.SetScale(2.0f);
+    m_spriteRender.Init(
+        "Assets/sprite/gameover.dds",
+        1920.0f,
+        1080.0f
+    );
 
     return true;
 }
 
 void GameOver::Update()
 {
+    // Aボタンでリトライ要求
+    if (g_pad[0]->IsTrigger(enButtonA))
+    {
+        m_isRetry = true;
+    }
 }
 
 void GameOver::Render(RenderContext& rc)
 {
-    m_fontRender.Draw(rc);
+    m_spriteRender.Draw(rc);
 }

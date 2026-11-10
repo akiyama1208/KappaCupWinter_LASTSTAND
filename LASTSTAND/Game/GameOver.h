@@ -1,5 +1,3 @@
-#pragma once
-
 class GameOver : public IGameObject
 {
 public:
@@ -10,6 +8,13 @@ public:
     void Update();
     void Render(RenderContext& rc);
 
+    // リトライ要求を取得
+    bool IsRetry() const
+    {
+        return m_isRetry;
+    }
+
 private:
-    FontRender m_fontRender;
+    SpriteRender m_spriteRender;
+    bool m_isRetry = false;
 };

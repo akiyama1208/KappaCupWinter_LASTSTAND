@@ -34,6 +34,12 @@
     <Filter Include="system\EnemyBulletPool">
       <UniqueIdentifier>{9cf9afdc-5e8e-41ac-863e-e1ec51b023f9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="system\Title">
+      <UniqueIdentifier>{e77c8410-2c70-4495-8e98-9966528fb340}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="system\GameClear">
+      <UniqueIdentifier>{8fa0f025-4d00-4afe-9141-7b8d0ccbb495}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -71,6 +77,12 @@
     <ClCompile Include="EnemyBulletPool.cpp">
       <Filter>system\EnemyBulletPool</Filter>
     </ClCompile>
+    <ClCompile Include="Title.cpp">
+      <Filter>system\Title</Filter>
+    </ClCompile>
+    <ClCompile Include="GameClear.cpp">
+      <Filter>system\GameClear</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -106,6 +118,12 @@
     </ClInclude>
     <ClInclude Include="EnemyBulletPool.h">
       <Filter>system\EnemyBulletPool</Filter>
+    </ClInclude>
+    <ClInclude Include="Title.h">
+      <Filter>system\Title</Filter>
+    </ClInclude>
+    <ClInclude Include="GameClear.h">
+      <Filter>system\GameClear</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

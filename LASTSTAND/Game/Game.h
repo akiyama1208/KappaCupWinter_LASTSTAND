@@ -7,6 +7,7 @@ class BackGround;
 class GameCamera;
 class Enemy;
 class Enemy2;
+class GameClear;
 class GameOver;
 
 class Game : public IGameObject
@@ -21,6 +22,8 @@ public:
 
 private:
     GameOver* m_gameOver = nullptr;
+    GameClear* m_gameClear = nullptr;
+
     Player* m_player = nullptr;
     BackGround* m_bg = nullptr;
     GameCamera* m_gameCamera = nullptr;
