@@ -45,11 +45,16 @@ public:
 	{
 		return m_isAiming;
 	}
+	// リロード処理
+	void Reload();
+	// リロード状態の更新
+	void UpdateReload();
 
 
 	//メンバ変数
 	ModelRender m_modelRender;
 	FontRender m_ammoFontRender;
+	FontRender m_reloadFontRender;
 	FontRender m_hpFontRender;
 	Vector3 position;
 	enum EnAnimationClip
@@ -65,6 +70,10 @@ public:
 	Quaternion rotation;
 	int playerState = 0;
 	float m_shootCooldown = 0.0f;
+	// リロード管理
+	bool m_isReloading = false;       // リロード中か
+	float m_reloadTimer = 0.0f;       // リロード経過時間
+	float m_reloadTime = 2.0f;        // リロードにかかる時間
 	int m_ammo = 30;                 // 現在の弾数
 	int m_maxAmmo = 30;              // 最大弾数
 	int m_ammoRecovery = 10;         // 回復する弾数

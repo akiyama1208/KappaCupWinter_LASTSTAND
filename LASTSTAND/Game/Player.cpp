@@ -24,6 +24,9 @@ Player::Player()
 	characterController.Init(40.0f, 75.0f, position);
 	// 弾数表示の位置
 	m_ammoFontRender.SetPosition(Vector3(400.0f, -300.0f, 0.0f));
+	// リロード表示の位置
+	m_reloadFontRender.SetPosition(Vector3(400.0f, -250.0f, 0.0f));
+	m_reloadFontRender.SetText(L"");
 	// HP表示の位置
 	m_hpFontRender.SetPosition(Vector3(-750.0f, 300.0f, 0.0f));
 }
@@ -91,6 +94,9 @@ void Player::Update()
 		}
 	}
 
+	// リロード処理
+	Reload();
+	UpdateReload();
 	// 射撃処理
 	Shoot();
 	//ステート管理
@@ -107,6 +113,16 @@ void Player::Update()
 		m_maxAmmo
 	);
 	m_ammoFontRender.SetText(ammoText);
+
+	// リロード表示を更新
+	if (m_isReloading)
+	{
+		m_reloadFontRender.SetText(L"RELOADING...");
+	}
+	else
+	{
+		m_reloadFontRender.SetText(L"");
+	}
 
 	// HP表示を更新
 	wchar_t hpText[64];
@@ -242,6 +258,12 @@ void Player::Shoot()
 {
 	printf("Shoot Called\n");
 
+	// リロード中は射撃できない
+	if (m_isReloading)
+	{
+		return;
+	}
+
 	// Xボタンまたはマウス左クリックで射撃
 	bool isShooting =
 		g_pad[0]->IsPress(enButtonX) ||
@@ -366,6 +388,60 @@ void Player::RecoverAmmo(int amount)
 	}
 }
 
+void Player::Reload()
+{
+	// RキーまたはYボタンでリロード
+	bool isReloadButton =
+		(GetAsyncKeyState('R') & 0x8000) ||
+		g_pad[0]->IsTrigger(enButtonY);
+
+	if (!isReloadButton)
+	{
+		return;
+	}
+
+	// すでにリロード中なら何もしない
+	if (m_isReloading)
+	{
+		return;
+	}
+
+	// 弾が満タンならリロードしない
+	if (m_ammo >= m_maxAmmo)
+	{
+		return;
+	}
+
+	// リロード開始
+	m_isReloading = true;
+	m_reloadTimer = m_reloadTime;
+
+	OutputDebugStringA("Reload Start!\n");
+}
+
+void Player::UpdateReload()
+{
+	if (!m_isReloading)
+	{
+		return;
+	}
+
+	m_reloadTimer -= 1.0f / 60.0f;
+
+	if (m_reloadTimer <= 0.0f)
+	{
+		m_reloadTimer = 0.0f;
+
+		// 弾を満タンにする
+		m_ammo = m_maxAmmo;
+
+		// リロード終了
+		m_isReloading = false;
+
+		OutputDebugStringA("Reload Complete!\n");
+	}
+}
+
 void Player::CheckEnemyCollision()
 {
 	Enemy* enemy = FindGO<Enemy>("enemy");
@@ -437,6 +513,9 @@ void Player::Render(RenderContext& rc)
 
 	// 弾数を描画
 	m_ammoFontRender.Draw(rc);
+
+	// リロード表示
+	m_reloadFontRender.Draw(rc);
 
 	// HPを描画
 	m_hpFontRender.Draw(rc);
