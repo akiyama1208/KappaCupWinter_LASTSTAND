@@ -12,7 +12,7 @@ GameOver::~GameOver()
 bool GameOver::Start()
 {
     m_spriteRender.Init(
-        "Assets/sprite/gameover.dds",
+        "Assets/sprite/gameover2.dds",
         1920.0f,
         1080.0f
     );
