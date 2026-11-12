@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Enemy.h"
 #include "Player.h"
+#include "sound/SoundSource.h"
 
 bool Enemy::Start()
 {
@@ -101,6 +102,12 @@ void Enemy::TakeDamage(int damage)
     if (m_hp <= 0)
     {
         m_hp = 0;
+
+        // 敵撃破SEを再生
+        SoundSource* se = NewGO<SoundSource>(0);
+        se->Init(6);
+        se->SetVolume(3.5f);
+        se->Play(false);
 
         OutputDebugStringA("Enemy deleted\n");
 

@@ -12,6 +12,7 @@
 #include "Title.h"
 #include "GameClear.h"
 #include "GameOver.h"
+#include "sound/SoundEngine.h"
 
 Game::Game()
 {
@@ -67,6 +68,25 @@ Game::~Game()
 
 bool Game::Start()
 {
+    // 命中SEを読み込む
+    g_soundEngine->ResistWaveFileBank(
+        3, "Assets/sound/hit.wav");
+
+    // 敵の発射SEを読み込む
+    g_soundEngine->ResistWaveFileBank(
+        4, "Assets/sound/enemy_shoot.wav");
+    
+    // プレイヤー被弾SEを読み込む
+    g_soundEngine->ResistWaveFileBank(
+        5, "Assets/sound/damage.wav");
+
+    // 敵撃破SEを読み込む
+    g_soundEngine->ResistWaveFileBank(
+        6, "Assets/sound/enemy_dead.wav");
+    
+    NewGO<Aim>(0, "aim");
+
+
     NewGO<Aim>(0, "aim");
 
     // プレイヤー生成

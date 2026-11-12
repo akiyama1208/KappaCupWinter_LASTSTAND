@@ -2,6 +2,7 @@
 #include "Bullet.h"
 #include "Enemy.h"
 #include "physics/Physics.h"
+#include "sound/SoundSource.h"
 
 Bullet::Bullet()
 {
@@ -103,6 +104,12 @@ void Bullet::Update()
 
         if ((enemyPosition - closestPosition).Length() < 110.0f)
         {
+            // 命中SEを再生
+            SoundSource* se = NewGO<SoundSource>(0);
+            se->Init(3);
+            se->SetVolume(3.5f);
+            se->Play(false);
+
             enemy->TakeDamage(25);
             Deactivate();
             return;
@@ -135,6 +142,12 @@ void Bullet::Update()
 
         if ((enemyPosition - closestPosition).Length() < 110.0f)
         {
+            // 命中SEを再生
+            SoundSource* se = NewGO<SoundSource>(0);
+            se->Init(3);
+            se->SetVolume(3.5f);
+            se->Play(false);
+
             enemy2->TakeDamage(25);
             Deactivate();
             return;
