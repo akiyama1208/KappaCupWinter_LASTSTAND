@@ -2,6 +2,7 @@
 #include "EnemyBullet.h"
 #include "Player.h"
 #include "physics/Physics.h"
+#include "sound/SoundSource.h"
 
 EnemyBullet::EnemyBullet()
 {
@@ -118,6 +119,12 @@ void EnemyBullet::Update()
     // プレイヤーのカプセル半径125 + 弾の半径10
     if ((m_player->position - closestPosition).Length() < 50.0f)
     {
+        // 被弾SEを再生
+        SoundSource* se = NewGO<SoundSource>(0);
+        se->Init(5);
+        se->SetVolume(3.5f);
+        se->Play(false);
+
         // プレイヤーに25ダメージ
         m_player->TakeDamage(25);
 

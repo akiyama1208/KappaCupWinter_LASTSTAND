@@ -2,6 +2,7 @@
 #include "Enemy2.h"
 #include "Player.h"
 #include "EnemyBulletPool.h"
+#include "sound/SoundSource.h"
 
 bool Enemy2::Start()
 {
@@ -118,4 +119,10 @@ void Enemy2::Attack()
         bulletPosition,
         direction
     );
+
+    // 発射SEを再生
+    SoundSource* se = NewGO<SoundSource>(0);
+    se->Init(4);
+    se->SetVolume(3.5f);
+    se->Play(false);
 }
