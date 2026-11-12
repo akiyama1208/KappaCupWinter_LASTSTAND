@@ -8,6 +8,7 @@
 #include "Bullet.h"
 #include "EnemyBullet.h"
 #include "EnemyBulletPool.h"
+#include "Aim.h"
 #include "Title.h"
 #include "GameClear.h"
 #include "GameOver.h"
@@ -66,6 +67,8 @@ Game::~Game()
 
 bool Game::Start()
 {
+    NewGO<Aim>(0, "aim");
+
     // プレイヤー生成
     m_player = NewGO<Player>(0, "player");
     m_player->SetName("player");
@@ -124,6 +127,8 @@ void Game::Update()
     // プレイヤーがゲームオーバーになったか確認
     if (m_player->IsGameOver())
     {
+        m_gameCamera->SetCameraActive(false);
+        ShowCursor(TRUE);
         m_gameOver = NewGO<GameOver>(0, "gameOver");
         return;
     }
@@ -156,6 +161,8 @@ void Game::Update()
     // Enemy1・Enemy2を倒したらゲームクリア
     if (m_isEnemy2Spawned && m_enemy2 == nullptr)
     {
+        m_gameCamera->SetCameraActive(false);
+        ShowCursor(TRUE);
         m_gameClear = NewGO<GameClear>(0, "gameClear");
         return;
     }

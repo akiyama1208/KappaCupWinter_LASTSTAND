@@ -1,6 +1,8 @@
 #pragma once
 
 class Bullet;
+class Aim;
+class GameCamera;
 
 class Player : public IGameObject
 {
@@ -28,7 +30,6 @@ public:
 	{
 		return m_hp;
 	}
-
 	// ゲームオーバー状態を取得
 	bool IsGameOver() const
 	{
@@ -39,6 +40,11 @@ public:
 	// 弾数を回復
 	void RecoverAmmo(int amount);
 	bool Start() override;
+	// エイム状態を取得
+	bool IsAiming() const
+	{
+		return m_isAiming;
+	}
 
 
 	//メンバ変数
@@ -68,5 +74,8 @@ public:
 	float m_invincibleTimer = 0.0f;  // ダメージを受けた後の無敵時間
 	static const int BULLET_POOL_SIZE = 30; // プレイヤー弾のプール
 	Bullet* m_bulletPool[BULLET_POOL_SIZE] = {};
+	bool m_isAiming = false;  // エイム状態
+	Aim* m_aim = nullptr;    // 照準
+	GameCamera* m_gameCamera = nullptr;
 };
 

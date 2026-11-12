@@ -2,6 +2,12 @@
 #include "Player.h"
 #include "Bullet.h"
 #include "Enemy.h"
+#include "Enemy2.h"
+#include "Aim.h"
+#include "GameCamera.h"
+#include "physics/Physics.h"
+#include <stdio.h>
+#include <Windows.h>
 
 Player::Player()
 {
@@ -24,12 +30,16 @@ Player::Player()
 
 bool Player::Start()
 {
+	// 照準を取得
+	m_aim = FindGO<Aim>("aim");
+
+	// カメラを取得
+	m_gameCamera = FindGO<GameCamera>("gameCamera");
+
 	// プレイヤー弾を30発生成
 	for (int i = 0; i < BULLET_POOL_SIZE; i++)
 	{
 		m_bulletPool[i] = NewGO<Bullet>(0, "bullet");
-
-		// 弾の初期化
 		m_bulletPool[i]->InitPool();
 	}
 
@@ -47,6 +57,15 @@ void Player::Update()
 	if (m_isGameOver)
 	{
 		return;
+	}
+
+	// マウスの右クリック判定
+	m_isAiming = (GetAsyncKeyState(VK_RBUTTON) & 0x8000) != 0;
+
+	// 照準の表示・非表示
+	if (m_aim != nullptr)
+	{
+		m_aim->SetVisible(m_isAiming);
 	}
 
 	//移動処理
@@ -125,8 +144,9 @@ void Player::Move()
 	// 移動速度
 	float speed = 400.0f;
 
-	// ダッシュ
-	if (g_pad[0]->IsPress(enButtonB))
+	// ダッシュ（コントローラーBボタンまたは左Shiftキー）
+	if (g_pad[0]->IsPress(enButtonB) ||
+		(GetAsyncKeyState(VK_LSHIFT) & 0x8000))
 	{
 		speed = 800.0f;
 	}
@@ -220,19 +240,23 @@ void Player::PlayAnimation()
 
 void Player::Shoot()
 {
-	// Xボタンを押している間、射撃する
-	if (g_pad[0]->IsPress(enButtonX) == false)
+	printf("Shoot Called\n");
+
+	// Xボタンまたはマウス左クリックで射撃
+	bool isShooting =
+		g_pad[0]->IsPress(enButtonX) ||
+		(GetAsyncKeyState(VK_LBUTTON) & 0x8000);
+
+	if (!isShooting)
 	{
 		return;
 	}
 
-	// 弾数が0なら撃てない
 	if (m_ammo <= 0)
 	{
 		return;
 	}
 
-	// 射撃間隔中は発射しない
 	if (m_shootCooldown > 0.0f)
 	{
 		return;
@@ -251,32 +275,83 @@ void Player::Shoot()
 		}
 	}
 
-	// 使用できる弾がなければ発射しない
 	if (bullet == nullptr)
 	{
 		return;
 	}
 
-	// プレイヤーが向いている方向を取得
-	Vector3 direction = Vector3::AxisZ;
-	rotation.Apply(direction);
-
-	// 水平方向に発射する
-	direction.y = 0.0f;
-	direction.Normalize();
-
 	// 弾の発射位置
 	Vector3 bulletPosition = position;
 	bulletPosition.y += 60.0f;
+
+	Vector3 direction;
+
+	if (m_isAiming && m_gameCamera != nullptr)
+	{
+		Vector3 cameraPosition = m_gameCamera->GetCameraPosition();
+		Vector3 cameraDirection = g_camera3D->GetForward();
+		cameraDirection.Normalize();
+
+		// 照準の基本目標地点
+		Vector3 aimPoint = cameraPosition + cameraDirection * 10000.0f;
+
+		// 敵1を取得
+		Enemy* enemy = FindGO<Enemy>("enemy");
+
+		if (enemy != nullptr)
+		{
+			Vector3 enemyPosition = enemy->GetPosition();
+			enemyPosition.y += 100.0f;
+
+			Vector3 toEnemy = enemyPosition - cameraPosition;
+			float distance = toEnemy.Dot(cameraDirection);
+
+			if (distance > 0.0f)
+			{
+				Vector3 closestPosition =
+					cameraPosition + cameraDirection * distance;
+
+				if ((enemyPosition - closestPosition).Length() < 125.0f)
+				{
+					// カメラの照準線上を目標地点にする
+					aimPoint = closestPosition;
+				}
+			}
+		}
+
+		// 弾の発射位置から目標地点へ向ける
+		direction = aimPoint - bulletPosition;
+		direction.Normalize();
+	}
+
+	else
+	{
+		direction = Vector3::AxisZ;
+		rotation.Apply(direction);
+		direction.y = 0.0f;
+		direction.Normalize();
+	}
+
 	bulletPosition += direction * 100.0f;
 
 	// 弾を再利用
-	bullet->Activate(bulletPosition, direction);
+	Vector3 aimOrigin = bulletPosition;
+	Vector3 aimDirection = direction;
 
-	// 次の射撃まで0.2秒待つ
+	if (m_isAiming && m_gameCamera != nullptr)
+	{
+		aimOrigin = m_gameCamera->GetCameraPosition();
+		aimDirection = g_camera3D->GetForward();
+		aimDirection.Normalize();
+	}
+
+	bullet->Activate(
+		bulletPosition,
+		direction,
+		aimOrigin,
+		aimDirection);
+
 	m_shootCooldown = 0.2f;
-
-	// 弾数を1発消費
 	m_ammo--;
 }
 
