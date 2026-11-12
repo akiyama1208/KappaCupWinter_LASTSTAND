@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Title.h"
 #include "Game.h"
+#include "HowToPlay.h"
 
 Title::Title()
 {
@@ -26,10 +27,10 @@ Title::~Title()
 
 void Title::Update()
 {
-    // Aボタンでゲーム開始
+    // Aボタンで操作説明画面へ
     if (g_pad[0]->IsTrigger(enButtonA))
     {
-        NewGO<Game>(0, "game");
+        NewGO<HowToPlay>(0, "howToPlay");
         DeleteGO(this);
         return;
     }

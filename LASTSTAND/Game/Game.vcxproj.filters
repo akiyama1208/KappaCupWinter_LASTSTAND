@@ -40,6 +40,9 @@
     <Filter Include="system\GameClear">
       <UniqueIdentifier>{8fa0f025-4d00-4afe-9141-7b8d0ccbb495}</UniqueIdentifier>
     </Filter>
+    <Filter Include="system\HowToPlay">
+      <UniqueIdentifier>{a260a447-8f3b-4ffa-b382-6f0171b8aeb6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -83,6 +86,9 @@
     <ClCompile Include="GameClear.cpp">
       <Filter>system\GameClear</Filter>
     </ClCompile>
+    <ClCompile Include="HowToPlay.cpp">
+      <Filter>system\HowToPlay</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -124,6 +130,9 @@
     </ClInclude>
     <ClInclude Include="GameClear.h">
       <Filter>system\GameClear</Filter>
+    </ClInclude>
+    <ClInclude Include="HowToPlay.h">
+      <Filter>system\HowToPlay</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
