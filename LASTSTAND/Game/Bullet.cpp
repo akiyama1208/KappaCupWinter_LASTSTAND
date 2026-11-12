@@ -28,7 +28,11 @@ void Bullet::InitPool()
 }
 
 // 弾を発射する
-void Bullet::Activate(const Vector3& position, const Vector3& direction)
+void Bullet::Activate(
+    const Vector3& position,
+    const Vector3& direction,
+    const Vector3& aimOrigin,
+    const Vector3& aimDirection)
 {
     if (!m_isInitialized)
     {
@@ -39,10 +43,11 @@ void Bullet::Activate(const Vector3& position, const Vector3& direction)
     m_direction = direction;
     m_direction.Normalize();
 
-    // 寿命をリセット
-    m_elapsedTime = 0.0f;
+    m_aimOrigin = aimOrigin;
+    m_aimDirection = aimDirection;
+    m_aimDirection.Normalize();
 
-    // 弾を有効化
+    m_elapsedTime = 0.0f;
     m_isActive = true;
 
     m_modelRender.SetPosition(m_position);
@@ -57,17 +62,12 @@ void Bullet::Deactivate()
 
 void Bullet::Update()
 {
-    // 使用中でなければ何もしない
-    if (!m_isActive)
-    {
-        return;
-    }
+    if (!m_isActive) return;
 
     const float deltaTime = 1.0f / 60.0f;
 
     m_elapsedTime += deltaTime;
 
-    // 寿命が切れたら再利用可能にする
     if (m_elapsedTime >= m_lifeTime)
     {
         Deactivate();
@@ -77,12 +77,15 @@ void Bullet::Update()
     Vector3 oldPosition = m_position;
     Vector3 newPosition = m_position + m_direction * m_speed * deltaTime;
 
-    // 敵との当たり判定
+    // 敵1との当たり判定
     Enemy* enemy = FindGO<Enemy>("enemy");
 
     if (enemy != nullptr)
     {
-        Vector3 toEnemy = enemy->GetPosition() - oldPosition;
+        Vector3 enemyPosition = enemy->GetPosition();
+        enemyPosition.y += 100.0f;
+
+        Vector3 toEnemy = enemyPosition - oldPosition;
         Vector3 move = newPosition - oldPosition;
 
         float moveLengthSq = move.Dot(move);
@@ -98,7 +101,7 @@ void Bullet::Update()
 
         Vector3 closestPosition = oldPosition + move * t;
 
-        if ((enemy->GetPosition() - closestPosition).Length() < 135.0f)
+        if ((enemyPosition - closestPosition).Length() < 110.0f)
         {
             enemy->TakeDamage(25);
             Deactivate();
@@ -111,7 +114,10 @@ void Bullet::Update()
 
     if (enemy2 != nullptr)
     {
-        Vector3 toEnemy = enemy2->GetPosition() - oldPosition;
+        Vector3 enemyPosition = enemy2->GetPosition();
+        enemyPosition.y += 100.0f;
+
+        Vector3 toEnemy = enemyPosition - oldPosition;
         Vector3 move = newPosition - oldPosition;
 
         float moveLengthSq = move.Dot(move);
@@ -127,7 +133,7 @@ void Bullet::Update()
 
         Vector3 closestPosition = oldPosition + move * t;
 
-        if ((enemy2->GetPosition() - closestPosition).Length() < 135.0f)
+        if ((enemyPosition - closestPosition).Length() < 110.0f)
         {
             enemy2->TakeDamage(25);
             Deactivate();
@@ -144,6 +150,7 @@ void Bullet::Update()
         return;
     }
 
+    // 弾の位置を更新
     m_position = newPosition;
 
     m_modelRender.SetPosition(m_position);

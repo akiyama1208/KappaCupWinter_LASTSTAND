@@ -10,7 +10,11 @@ public:
     // プール用の初期化
     void InitPool();
     // 弾を発射可能な状態にする
-    void Activate(const Vector3& position, const Vector3& direction);
+    void Activate(
+        const Vector3& position,
+        const Vector3& direction,
+        const Vector3& aimOrigin,
+        const Vector3& aimDirection);
     // 弾を使用停止にする
     void Deactivate();
     // 更新処理
@@ -33,9 +37,11 @@ private:
 
     Vector3 m_position;
     Vector3 m_direction;
+    Vector3 m_aimOrigin;
+    Vector3 m_aimDirection;
 
     float m_speed = 3000.0f;
-    float m_lifeTime = 1.0f;
+    float m_lifeTime = 2.0f;
     float m_elapsedTime = 0.0f;
 
     bool m_isActive = false;

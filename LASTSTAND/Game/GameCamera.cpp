@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "GameCamera.h"
 #include "Player.h"
+#include <Windows.h>
+#include "system/system.h"
 
 GameCamera::GameCamera()
 {
@@ -8,6 +10,9 @@ GameCamera::GameCamera()
 
 GameCamera::~GameCamera()
 {
+	while (ShowCursor(TRUE) < 0)
+	{
+	}
 }
 
 bool GameCamera::Start()
@@ -21,21 +26,63 @@ bool GameCamera::Start()
 	g_camera3D->SetNear(1.0f);
 	g_camera3D->SetFar(10000.0f);
 
+	// カーソルを確実に非表示にする
+	while (ShowCursor(FALSE) >= 0)
+	{
+	}
+
 	return true;
 }
 
 void GameCamera::Update()
 {
+	if (!m_isCameraActive)
+	{
+		return;
+	}
+
+	// ゲームオーバー・クリア中はカメラ操作しない
+	if (m_player->IsGameOver())
+	{
+		return;
+	}
+
 	//カメラを更新。
 	//注視点を計算する。
 	Vector3 target = m_player->position;
 	//プレイヤの足元からちょっと上を注視点とする。
-	target.y += 80.0f;
+	target.y += 100.0f;
 
 	Vector3 toCameraPosOld = m_toCameraPos;
-	//パッドの入力を使ってカメラを回す。
-	float x = g_pad[0]->GetRStickXF();
-	float y = g_pad[0]->GetRStickYF();
+	// マウスの現在位置を取得
+	// ゲームウィンドウの中央座標を取得
+	RECT rect;
+	GetClientRect(g_hWnd, &rect);
+
+	POINT centerPos;
+	centerPos.x = (rect.right - rect.left) / 2;
+	centerPos.y = (rect.bottom - rect.top) / 2;
+
+	// クライアント座標から画面座標に変換
+	ClientToScreen(g_hWnd, &centerPos);
+
+	// マウスの現在位置を取得
+	POINT currentMousePos;
+	GetCursorPos(&currentMousePos);
+
+	// 中央からの移動量を計算
+	float mouseDeltaX =
+		static_cast<float>(currentMousePos.x - centerPos.x);
+
+	float mouseDeltaY =
+		static_cast<float>(currentMousePos.y - centerPos.y);
+
+	// マウス移動量をカメラ回転量に変換
+	float x = mouseDeltaX * 0.05f;
+	float y = -mouseDeltaY * 0.05f;
+
+	// カーソルを中央に戻す
+	SetCursorPos(centerPos.x, centerPos.y);
 	//Y軸周りの回転
 	Quaternion qRot;
 	qRot.SetRotationDeg(Vector3::AxisY, 1.35f * x);
@@ -52,21 +99,57 @@ void GameCamera::Update()
 	//大きさが１になるということは、ベクトルから強さがなくなり、方向のみの情報となるということ。
 	Vector3 toPosDir = m_toCameraPos;
 	toPosDir.Normalize();
-	if (toPosDir.y < -0.2f) {
-		//カメラが上向きすぎ。
-		m_toCameraPos = toCameraPosOld;
+	// カメラの上下角度制限
+	if (m_player->IsAiming())
+	{
+		// エイム中は見下ろしすぎないようにする
+		if (toPosDir.y < -0.2f || toPosDir.y > 0.5f)
+		{
+			m_toCameraPos = toCameraPosOld;
+		}
 	}
-	else if (toPosDir.y > 0.9f) {
-		//カメラが下向きすぎ。
-		m_toCameraPos = toCameraPosOld;
+	else
+	{
+		// 通常時の角度制限
+		if (toPosDir.y < -0.2f || toPosDir.y > 0.9f)
+		{
+			m_toCameraPos = toCameraPosOld;
+		}
 	}
 
-	//視点を計算する。
-	Vector3 pos = target + m_toCameraPos;
-	//メインカメラに注視点と視点を設定する。
-	g_camera3D->SetTarget(target);
-	g_camera3D->SetPosition(pos);
+	// カメラ位置を計算する
+	Vector3 cameraOffset = m_toCameraPos;
 
-	//カメラの更新。
+	// エイム中は肩越し視点にする
+	if (m_player->IsAiming())
+	{
+		// カメラの高さを抑える
+		cameraOffset.y *= 0.1f;
+
+		// カメラまでの距離を調整
+		cameraOffset.Normalize();
+		cameraOffset *= 230.0f;
+
+		// プレイヤーの右肩側にカメラを移動
+		Vector3 cameraRight;
+		cameraRight.Cross(m_toCameraPos, Vector3::AxisY);
+		cameraRight.Normalize();
+
+		// 注視点を右にずらす
+		target += cameraRight * 120.0f;
+	}
+
+	// 実際のカメラ位置を計算する
+	Vector3 pos = target + cameraOffset;
+
+	// 実際のカメラ位置と注視点を保存
+	m_cameraPosition = pos;
+	m_cameraTarget = target;
+
+	// メインカメラに注視点と視点を設定する
+	g_camera3D->SetTarget(m_cameraTarget);
+	g_camera3D->SetPosition(m_cameraPosition);
+
+	// カメラの更新
 	g_camera3D->Update();
 }

@@ -40,6 +40,9 @@
     <Filter Include="system\GameClear">
       <UniqueIdentifier>{8fa0f025-4d00-4afe-9141-7b8d0ccbb495}</UniqueIdentifier>
     </Filter>
+    <Filter Include="system\Aim">
+      <UniqueIdentifier>{fe7b4f42-cb05-48d5-a4f6-b11cb2f3b48c}</UniqueIdentifier>
+    </Filter>
     <Filter Include="system\HowToPlay">
       <UniqueIdentifier>{a260a447-8f3b-4ffa-b382-6f0171b8aeb6}</UniqueIdentifier>
     </Filter>
@@ -86,6 +89,9 @@
     <ClCompile Include="GameClear.cpp">
       <Filter>system\GameClear</Filter>
     </ClCompile>
+    <ClCompile Include="Aim.cpp">
+      <Filter>system\Aim</Filter>
+    </ClCompile>
     <ClCompile Include="HowToPlay.cpp">
       <Filter>system\HowToPlay</Filter>
     </ClCompile>
@@ -130,6 +136,9 @@
     </ClInclude>
     <ClInclude Include="GameClear.h">
       <Filter>system\GameClear</Filter>
+    </ClInclude>
+    <ClInclude Include="Aim.h">
+      <Filter>system\Aim</Filter>
     </ClInclude>
     <ClInclude Include="HowToPlay.h">
       <Filter>system\HowToPlay</Filter>
