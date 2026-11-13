@@ -45,4 +45,10 @@ private:
     Vector3 m_cameraTarget;
 
     bool m_isCameraActive = true;
+
+    // マウスカメラ操作の有効・無効
+    bool m_isMouseControlEnabled = true;
+
+    // F1キーの前回状態
+    bool m_wasF1Pressed = false;
 };
