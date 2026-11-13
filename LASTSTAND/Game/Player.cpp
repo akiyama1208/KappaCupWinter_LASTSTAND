@@ -27,8 +27,18 @@ Player::Player()
 	// リロード表示の位置
 	m_reloadFontRender.SetPosition(Vector3(400.0f, -250.0f, 0.0f));
 	m_reloadFontRender.SetText(L"");
-	// HP表示の位置
-	m_hpFontRender.SetPosition(Vector3(-750.0f, 300.0f, 0.0f));
+	// HPバーの背景
+	m_hpBarBackRender.Init("Assets/sprite/white.dds", 400.0f, 30.0f);
+	m_hpBarBackRender.SetPivot(Vector2(0.0f, 0.5f));
+	m_hpBarBackRender.SetPosition(Vector3(-900.0f, 480.0f, 0.0f));
+	// 背景を灰色にする
+	m_hpBarBackRender.SetMulColor(Vector4(0.3f, 0.3f, 0.3f, 1.0f));
+	// HPバー本体
+	m_hpBarRender.Init("Assets/sprite/white.dds", 400.0f, 30.0f);
+	m_hpBarRender.SetPivot(Vector2(0.0f, 0.5f));
+	m_hpBarRender.SetPosition(Vector3(-900.0f, 480.0f, 0.0f));
+	// HPバーを緑色にする
+	m_hpBarRender.SetMulColor(Vector4(0.0f, 1.0f, 0.0f, 1.0f));
 }
 
 bool Player::Start()
@@ -124,16 +134,30 @@ void Player::Update()
 		m_reloadFontRender.SetText(L"");
 	}
 
-	// HP表示を更新
-	wchar_t hpText[64];
-	swprintf_s(
-		hpText,
-		64,
-		L"HP: %d / %d",
-		m_hp,
-		m_maxHp
+	// HPバーの長さを更新
+	float hpRate = (float)m_hp / m_maxHp;
+
+	m_hpBarRender.SetScale(
+		Vector3(hpRate, 1.0f, 1.0f)
 	);
-	m_hpFontRender.SetText(hpText);
+
+	// HP残量に応じてバーの色を変更
+	if (hpRate > 0.5f)
+	{
+		m_hpBarRender.SetMulColor(Vector4(0.0f, 1.0f, 0.0f, 1.0f));
+	}
+	else if (hpRate > 0.25f)
+	{
+		m_hpBarRender.SetMulColor(Vector4(1.0f, 1.0f, 0.0f, 1.0f));
+	}
+	else if (hpRate > 0.0f)
+	{
+		m_hpBarRender.SetMulColor(Vector4(1.0f, 0.0f, 0.0f, 1.0f));
+	}
+
+	// HPバーを更新
+	m_hpBarBackRender.Update();
+	m_hpBarRender.Update();
 
 	//絵描きさんの更新処理
 	m_modelRender.Update();
@@ -489,17 +513,6 @@ void Player::TakeDamage(int damage)
 		m_invincibleTimer = 1.0f;
 	}
 
-	// HP表示をその場で更新
-	wchar_t hpText[64];
-	swprintf_s(
-		hpText,
-		64,
-		L"HP: %d / %d",
-		m_hp,
-		m_maxHp
-	);
-	m_hpFontRender.SetText(hpText);
-
 	// ゲームオーバー表示用ログ
 	if (m_isGameOver)
 	{
@@ -517,6 +530,9 @@ void Player::Render(RenderContext& rc)
 	// リロード表示
 	m_reloadFontRender.Draw(rc);
 
-	// HPを描画
-	m_hpFontRender.Draw(rc);
+	// HPバーの背景を描画
+	m_hpBarBackRender.Draw(rc);
+
+	// HPバーを描画
+	m_hpBarRender.Draw(rc);
 }

@@ -55,7 +55,9 @@ public:
 	ModelRender m_modelRender;
 	FontRender m_ammoFontRender;
 	FontRender m_reloadFontRender;
-	FontRender m_hpFontRender;
+	// HPバー表示
+	SpriteRender m_hpBarBackRender;
+	SpriteRender m_hpBarRender;
 	Vector3 position;
 	enum EnAnimationClip
 	{
