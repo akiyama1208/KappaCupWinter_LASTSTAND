@@ -17,12 +17,13 @@ GameCamera::~GameCamera()
 
 bool GameCamera::Start()
 {
-	//注視点から視点までのベクトルを設定。
+	// 注視点から視点までのベクトルを設定
 	m_toCameraPos.Set(0.0f, 125.0f, -250.0f);
-	//プレイヤーのインスタンスを探す。
+
+	// プレイヤーのインスタンスを探す
 	m_player = FindGO<Player>("player");
 
-	//カメラのニアクリップとファークリップを設定する。
+	// カメラのニアクリップとファークリップを設定
 	g_camera3D->SetNear(1.0f);
 	g_camera3D->SetFar(10000.0f);
 
@@ -36,6 +37,32 @@ bool GameCamera::Start()
 
 void GameCamera::Update()
 {
+	// F1キーでマウス操作を切り替える
+	bool isF1Pressed =
+		(GetAsyncKeyState(VK_F1) & 0x8000) != 0;
+
+	if (isF1Pressed && !m_wasF1Pressed)
+	{
+		m_isMouseControlEnabled = !m_isMouseControlEnabled;
+
+		if (m_isMouseControlEnabled)
+		{
+			// カーソルを非表示にする
+			while (ShowCursor(FALSE) >= 0)
+			{
+			}
+		}
+		else
+		{
+			// カーソルを表示する
+			while (ShowCursor(TRUE) < 0)
+			{
+			}
+		}
+	}
+
+	m_wasF1Pressed = isF1Pressed;
+
 	if (!m_isCameraActive)
 	{
 		return;
@@ -47,58 +74,65 @@ void GameCamera::Update()
 		return;
 	}
 
-	//カメラを更新。
-	//注視点を計算する。
+	// カメラを更新
+	// 注視点を計算する
 	Vector3 target = m_player->position;
-	//プレイヤの足元からちょっと上を注視点とする。
+
+	// プレイヤーの足元から少し上を注視点とする
 	target.y += 100.0f;
 
 	Vector3 toCameraPosOld = m_toCameraPos;
-	// マウスの現在位置を取得
-	// ゲームウィンドウの中央座標を取得
-	RECT rect;
-	GetClientRect(g_hWnd, &rect);
 
-	POINT centerPos;
-	centerPos.x = (rect.right - rect.left) / 2;
-	centerPos.y = (rect.bottom - rect.top) / 2;
+	// マウス操作が有効な場合だけカメラを回転させる
+	if (m_isMouseControlEnabled)
+	{
+		// ゲームウィンドウの中央座標を取得
+		RECT rect;
+		GetClientRect(g_hWnd, &rect);
 
-	// クライアント座標から画面座標に変換
-	ClientToScreen(g_hWnd, &centerPos);
+		POINT centerPos;
+		centerPos.x = (rect.right - rect.left) / 2;
+		centerPos.y = (rect.bottom - rect.top) / 2;
 
-	// マウスの現在位置を取得
-	POINT currentMousePos;
-	GetCursorPos(&currentMousePos);
+		// クライアント座標から画面座標に変換
+		ClientToScreen(g_hWnd, &centerPos);
 
-	// 中央からの移動量を計算
-	float mouseDeltaX =
-		static_cast<float>(currentMousePos.x - centerPos.x);
+		// マウスの現在位置を取得
+		POINT currentMousePos;
+		GetCursorPos(&currentMousePos);
 
-	float mouseDeltaY =
-		static_cast<float>(currentMousePos.y - centerPos.y);
+		// 中央からの移動量を計算
+		float mouseDeltaX =
+			static_cast<float>(currentMousePos.x - centerPos.x);
 
-	// マウス移動量をカメラ回転量に変換
-	float x = mouseDeltaX * 0.05f;
-	float y = -mouseDeltaY * 0.05f;
+		float mouseDeltaY =
+			static_cast<float>(currentMousePos.y - centerPos.y);
 
-	// カーソルを中央に戻す
-	SetCursorPos(centerPos.x, centerPos.y);
-	//Y軸周りの回転
-	Quaternion qRot;
-	qRot.SetRotationDeg(Vector3::AxisY, 1.35f * x);
-	qRot.Apply(m_toCameraPos);
-	//X軸周りの回転。
-	Vector3 axisX;
-	axisX.Cross(Vector3::AxisY, m_toCameraPos);
-	axisX.Normalize();
-	qRot.SetRotationDeg(axisX, 1.3f * y);
-	qRot.Apply(m_toCameraPos);
-	//カメラの回転の上限をチェックする。
-	//注視点から視点までのベクトルを正規化する。
-	//正規化すると、ベクトルの大きさが１になる。
-	//大きさが１になるということは、ベクトルから強さがなくなり、方向のみの情報となるということ。
+		// マウス移動量をカメラ回転量に変換
+		float x = mouseDeltaX * 0.05f;
+		float y = -mouseDeltaY * 0.05f;
+
+		// カーソルを中央に戻す
+		SetCursorPos(centerPos.x, centerPos.y);
+
+		// Y軸周りの回転
+		Quaternion qRot;
+		qRot.SetRotationDeg(Vector3::AxisY, 1.35f * x);
+		qRot.Apply(m_toCameraPos);
+
+		// X軸周りの回転
+		Vector3 axisX;
+		axisX.Cross(Vector3::AxisY, m_toCameraPos);
+		axisX.Normalize();
+
+		qRot.SetRotationDeg(axisX, 1.3f * y);
+		qRot.Apply(m_toCameraPos);
+	}
+
+	// カメラの回転の上限をチェックする
 	Vector3 toPosDir = m_toCameraPos;
 	toPosDir.Normalize();
+
 	// カメラの上下角度制限
 	if (m_player->IsAiming())
 	{
