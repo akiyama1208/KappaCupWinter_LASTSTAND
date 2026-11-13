@@ -19,7 +19,7 @@ void EnemyBullet::Init(
 {
     m_collider.Create(10.0f);
 
-    m_modelRender.Init("Assets/modelData/bullet/bullet.tkm");
+    m_modelRender.Init("Assets/modelData/enemybullet/enemybullet.tkm");
 
     m_position = position;
     m_direction = direction;
