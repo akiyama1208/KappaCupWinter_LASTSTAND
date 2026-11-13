@@ -86,9 +86,6 @@ bool Game::Start()
     
     NewGO<Aim>(0, "aim");
 
-
-    NewGO<Aim>(0, "aim");
-
     // プレイヤー生成
     m_player = NewGO<Player>(0, "player");
     m_player->SetName("player");
@@ -165,8 +162,12 @@ void Game::Update()
     // Enemy1が倒されたらEnemy2を生成
     if (m_enemy == nullptr && !m_isEnemy2Spawned)
     {
+        OutputDebugStringA("Enemy2 Spawn Start\n");
+
         m_enemy2 = NewGO<Enemy2>(0, "enemy2");
         m_isEnemy2Spawned = true;
+
+        OutputDebugStringA("Enemy2 Spawn End\n");
     }
 
     // Enemy2が削除されたか確認

@@ -21,11 +21,48 @@ bool Enemy::Start()
 
     m_hpFontRender.SetPosition(m_hpFontPosition);
 
+    // HPバーの背景
+    m_hpBarBackRender.Init("Assets/sprite/white.dds", 200.0f, 15.0f);
+    m_hpBarBackRender.SetPivot(Vector2(0.0f, 0.5f));
+    m_hpBarBackRender.SetPosition(Vector3(-50.0f, 480.0f, 0.0f));
+    m_hpBarBackRender.SetMulColor(Vector4(0.3f, 0.3f, 0.3f, 1.0f));
+
+    // HPバー本体
+    m_hpBarRender.Init("Assets/sprite/white.dds", 200.0f, 15.0f);
+    m_hpBarRender.SetPivot(Vector2(0.0f, 0.5f));
+    m_hpBarRender.SetPosition(Vector3(-50.0f, 480.0f, 0.0f));
+    m_hpBarRender.SetMulColor(Vector4(0.0f, 1.0f, 0.0f, 1.0f));
+
     return true;
 }
 
 void Enemy::Update()
 {
+    // HPバーの長さを更新
+    float hpRate = (float)m_hp / m_maxHp;
+
+    m_hpBarRender.SetScale(
+        Vector3(hpRate, 1.0f, 1.0f)
+    );
+
+    // HP残量に応じて色を変更
+    if (hpRate > 0.5f)
+    {
+        m_hpBarRender.SetMulColor(Vector4(0.0f, 1.0f, 0.0f, 1.0f));
+    }
+    else if (hpRate > 0.25f)
+    {
+        m_hpBarRender.SetMulColor(Vector4(1.0f, 1.0f, 0.0f, 1.0f));
+    }
+    else if (hpRate > 0.0f)
+    {
+        m_hpBarRender.SetMulColor(Vector4(1.0f, 0.0f, 0.0f, 1.0f));
+    }
+
+    // HPバーを更新
+    m_hpBarBackRender.Update();
+    m_hpBarRender.Update();
+
     // プレイヤーがいなければ処理を終了
     if (m_player == nullptr)
     {
@@ -71,20 +108,14 @@ void Enemy::Render(RenderContext& rc)
 {
     m_modelRender.Draw(rc);
 
-    // 敵のHPを表示
-    wchar_t hpText[64];
-    swprintf_s(
-        hpText,
-        64,
-        L"%ls: %d / %d",
-        m_hpLabel,
-        m_hp,
-        m_maxHp
-    );
-
+    // 敵の名前だけ表示
     m_hpFontRender.SetPosition(m_hpFontPosition);
-    m_hpFontRender.SetText(hpText);
+    m_hpFontRender.SetText(m_hpLabel);
     m_hpFontRender.Draw(rc);
+
+    // HPバーを描画
+    m_hpBarBackRender.Draw(rc);
+    m_hpBarRender.Draw(rc);
 }
 
 void Enemy::TakeDamage(int damage)

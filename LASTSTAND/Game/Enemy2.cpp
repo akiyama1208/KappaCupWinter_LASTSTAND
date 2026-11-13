@@ -6,9 +6,32 @@
 
 bool Enemy2::Start()
 {
+    OutputDebugStringA("Enemy2 Start Begin\n");
+
+    // HP
+    m_hp = 150;
+    m_maxHp = 150;
+
+    // 敵2のHP表示位置
+    m_hpFontPosition = Vector3(-250.0f, 500.0f, 0.0f);
+
+    // HP表示名
+    m_hpLabel = L"ENEMY2 HP";
+
+    // HPバーの背景
+    m_hpBarBackRender.Init("Assets/sprite/white.dds", 200.0f, 15.0f);
+    m_hpBarBackRender.SetPivot(Vector2(0.0f, 0.5f));
+    m_hpBarBackRender.SetPosition(Vector3(-30.0f, 480.0f, 0.0f));
+    m_hpBarBackRender.SetMulColor(Vector4(0.3f, 0.3f, 0.3f, 1.0f));
+
+    // HPバー本体
+    m_hpBarRender.Init("Assets/sprite/white.dds", 200.0f, 15.0f);
+    m_hpBarRender.SetPivot(Vector2(0.0f, 0.5f));
+    m_hpBarRender.SetPosition(Vector3(-30.0f, 480.0f, 0.0f));
+    m_hpBarRender.SetMulColor(Vector4(0.0f, 1.0f, 0.0f, 1.0f));
+
     // 初期位置
     m_position = Vector3(4000.0f, 0.0f, 500.0f);
-
     m_moveSpeed = Vector3(0.0f, 0.0f, 0.0f);
 
     // プレイヤーを取得
@@ -25,17 +48,7 @@ bool Enemy2::Start()
     // 当たり判定
     m_characterController.Init(125.0f, 200.0f, m_position);
 
-    // HP
-    m_hp = 150;
-
-    m_hp = 150;
-    m_maxHp = 150;
-
-    // 敵2のHP表示位置
-    m_hpFontPosition = Vector3(-250.0f, 450.0f, 0.0f);
-
-    // HP表示名
-    m_hpLabel = L"ENEMY2 HP";
+    OutputDebugStringA("Enemy2 Start End\n");
 
     return true;
 }
@@ -62,6 +75,30 @@ void Enemy2::Update()
 
     m_modelRender.SetPosition(m_position);
     m_modelRender.Update();
+
+    // HPバーの長さを更新
+    float hpRate = (float)m_hp / m_maxHp;
+
+    m_hpBarRender.SetScale(
+        Vector3(hpRate, 1.0f, 1.0f)
+    );
+
+    // HP残量に応じて色を変更
+    if (hpRate > 0.5f)
+    {
+        m_hpBarRender.SetMulColor(Vector4(0.0f, 1.0f, 0.0f, 1.0f));
+    }
+    else if (hpRate > 0.25f)
+    {
+        m_hpBarRender.SetMulColor(Vector4(1.0f, 1.0f, 0.0f, 1.0f));
+    }
+    else if (hpRate > 0.0f)
+    {
+        m_hpBarRender.SetMulColor(Vector4(1.0f, 0.0f, 0.0f, 1.0f));
+    }
+
+    m_hpBarBackRender.Update();
+    m_hpBarRender.Update();
 }
 
 void Enemy2::Move()

@@ -40,6 +40,10 @@ protected:
     // 敵のHP表示
     FontRender m_hpFontRender;
 
+    // 敵のHPバー
+    SpriteRender m_hpBarBackRender;
+    SpriteRender m_hpBarRender;
+
     // HP表示位置
     Vector3 m_hpFontPosition = Vector3(-250.0f,500.0f, 0.0f);
 
