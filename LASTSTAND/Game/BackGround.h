@@ -14,6 +14,3 @@ private:
 	PhysicsStaticObject m_pos;
 	PhysicsStaticObject physicsStaticObject;
 };
-
-
-

@@ -31,7 +31,7 @@ bool Enemy2::Start()
     m_hpBarRender.SetMulColor(Vector4(0.0f, 1.0f, 0.0f, 1.0f));
 
     // 初期位置
-    m_position = Vector3(4000.0f, 0.0f, 500.0f);
+    m_position = Vector3(-4000.0f, 0.0f, 500.0f);
     m_moveSpeed = Vector3(0.0f, 0.0f, 0.0f);
 
     // プレイヤーを取得

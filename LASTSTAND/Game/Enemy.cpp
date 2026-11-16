@@ -5,7 +5,7 @@
 
 bool Enemy::Start()
 {
-    m_position = Vector3(0.0f, 0.0f, 5000.0f);
+    m_position = Vector3(-3000.0f, 0.0f, 5000.0f);
     m_moveSpeed = Vector3(0.0f, 0.0f, 0.0f);
 
     // プレイヤーを取得

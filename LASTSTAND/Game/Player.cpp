@@ -20,6 +20,8 @@ Player::Player()
 	animationClips[enAnimationClip_Jump].SetLoopFlag(false);
 	//ユニティちゃんのモデルを読み込む
 	m_modelRender.Init("Assets/modelData/unityChan.tkm", animationClips, enAnimationClip_Num, enModelUpAxisY);
+	// 初期位置
+	position = Vector3(0.0f, 0.0f, 0.0f);
 	//キャラコンを初期化する
 	characterController.Init(40.0f, 75.0f, position);
 	// 弾数表示の位置

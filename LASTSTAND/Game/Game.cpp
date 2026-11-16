@@ -68,6 +68,9 @@ Game::~Game()
 
 bool Game::Start()
 {
+    // 当たり判定を表示
+    PhysicsWorld::GetInstance()->EnableDrawDebugWireFrame();
+
     // 命中SEを読み込む
     g_soundEngine->ResistWaveFileBank(
         3, "Assets/sound/hit.wav");
