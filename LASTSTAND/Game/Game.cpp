@@ -5,6 +5,7 @@
 #include "GameCamera.h"
 #include "Enemy.h"
 #include "Enemy2.h"
+#include "Enemy3.h"
 #include "Bullet.h"
 #include "EnemyBullet.h"
 #include "EnemyBulletPool.h"
@@ -49,6 +50,9 @@ Game::~Game()
 
     Enemy2* enemy2 = FindGO<Enemy2>("enemy2");
     DeleteGO(enemy2);
+
+    Enemy3* enemy3 = FindGO<Enemy3>("enemy3");
+    DeleteGO(enemy3);
 
     // プレイヤーを削除
     DeleteGO(m_player);
@@ -182,8 +186,30 @@ void Game::Update()
         }
     }
 
-    // Enemy1・Enemy2を倒したらゲームクリア
-    if (m_isEnemy2Spawned && m_enemy2 == nullptr)
+    // Enemy2が倒されたらEnemy3を生成
+    if (m_enemy2 == nullptr &&
+        m_isEnemy2Spawned &&
+        !m_isEnemy3Spawned)
+    {
+        OutputDebugStringA("Enemy3 Spawn Start\n");
+
+        m_enemy3 = NewGO<Enemy3>(0, "enemy3");
+        m_isEnemy3Spawned = true;
+
+        OutputDebugStringA("Enemy3 Spawn End\n");
+    }
+
+    // Enemy3が削除されたか確認
+    if (m_isEnemy3Spawned && m_enemy3 != nullptr)
+    {
+        if (FindGO<Enemy3>("enemy3") == nullptr)
+        {
+            m_enemy3 = nullptr;
+        }
+    }
+
+    // Enemy3を倒したらゲームクリア
+    if (m_isEnemy3Spawned && m_enemy3 == nullptr)
     {
         m_gameCamera->SetCameraActive(false);
         ShowCursor(TRUE);

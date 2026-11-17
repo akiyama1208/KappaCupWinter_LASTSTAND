@@ -7,6 +7,7 @@ class BackGround;
 class GameCamera;
 class Enemy;
 class Enemy2;
+class Enemy3;
 class GameClear;
 class GameOver;
 
@@ -31,9 +32,13 @@ private:
     // 敵
     Enemy* m_enemy = nullptr;
     Enemy2* m_enemy2 = nullptr;
+    Enemy3* m_enemy3 = nullptr;
 
     // Enemy2の出現管理
     bool m_isEnemy2Spawned = false;
+
+    // Enemy3の出現管理
+    bool m_isEnemy3Spawned = false;
 
     ModelRender m_modelRender;
     Vector3 m_pos;

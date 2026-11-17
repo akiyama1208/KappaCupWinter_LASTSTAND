@@ -154,6 +154,44 @@ void Bullet::Update()
         }
     }
 
+    // 敵3との当たり判定
+    Enemy* enemy3 = FindGO<Enemy>("enemy3");
+
+    if (enemy3 != nullptr)
+    {
+        Vector3 enemyPosition = enemy3->GetPosition();
+        enemyPosition.y += 100.0f;
+
+        Vector3 toEnemy = enemyPosition - oldPosition;
+        Vector3 move = newPosition - oldPosition;
+
+        float moveLengthSq = move.Dot(move);
+        float t = 0.0f;
+
+        if (moveLengthSq > 0.0f)
+        {
+            t = toEnemy.Dot(move) / moveLengthSq;
+
+            if (t < 0.0f) t = 0.0f;
+            if (t > 1.0f) t = 1.0f;
+        }
+
+        Vector3 closestPosition = oldPosition + move * t;
+
+        if ((enemyPosition - closestPosition).Length() < 110.0f)
+        {
+            // 命中SEを再生
+            SoundSource* se = NewGO<SoundSource>(0);
+            se->Init(3);
+            se->SetVolume(3.5f);
+            se->Play(false);
+
+            enemy3->TakeDamage(25);
+            Deactivate();
+            return;
+        }
+    }
+
     // 壁との当たり判定
     Vector3 hitPos;
 

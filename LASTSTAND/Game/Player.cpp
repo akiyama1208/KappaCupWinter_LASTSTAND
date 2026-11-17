@@ -340,10 +340,13 @@ void Player::Shoot()
 		Vector3 cameraDirection = g_camera3D->GetForward();
 		cameraDirection.Normalize();
 
+		// 最も近い敵までの距離
+		float nearestDistance = 10000.0f;
+		
 		// 照準の基本目標地点
 		Vector3 aimPoint = cameraPosition + cameraDirection * 10000.0f;
 
-		// 敵1を取得
+		// Enemy1
 		Enemy* enemy = FindGO<Enemy>("enemy");
 
 		if (enemy != nullptr)
@@ -354,14 +357,62 @@ void Player::Shoot()
 			Vector3 toEnemy = enemyPosition - cameraPosition;
 			float distance = toEnemy.Dot(cameraDirection);
 
-			if (distance > 0.0f)
+			if (distance > 0.0f && distance < nearestDistance)
 			{
 				Vector3 closestPosition =
 					cameraPosition + cameraDirection * distance;
 
 				if ((enemyPosition - closestPosition).Length() < 125.0f)
 				{
-					// カメラの照準線上を目標地点にする
+					nearestDistance = distance;
+					aimPoint = closestPosition;
+				}
+			}
+		}
+
+		// Enemy2
+		Enemy* enemy2 = FindGO<Enemy>("enemy2");
+
+		if (enemy2 != nullptr)
+		{
+			Vector3 enemyPosition = enemy2->GetPosition();
+			enemyPosition.y += 100.0f;
+
+			Vector3 toEnemy = enemyPosition - cameraPosition;
+			float distance = toEnemy.Dot(cameraDirection);
+
+			if (distance > 0.0f && distance < nearestDistance)
+			{
+				Vector3 closestPosition =
+					cameraPosition + cameraDirection * distance;
+
+				if ((enemyPosition - closestPosition).Length() < 125.0f)
+				{
+					nearestDistance = distance;
+					aimPoint = closestPosition;
+				}
+			}
+		}
+
+		// Enemy3
+		Enemy* enemy3 = FindGO<Enemy>("enemy3");
+
+		if (enemy3 != nullptr)
+		{
+			Vector3 enemyPosition = enemy3->GetPosition();
+			enemyPosition.y += 100.0f;
+
+			Vector3 toEnemy = enemyPosition - cameraPosition;
+			float distance = toEnemy.Dot(cameraDirection);
+
+			if (distance > 0.0f && distance < nearestDistance)
+			{
+				Vector3 closestPosition =
+					cameraPosition + cameraDirection * distance;
+
+				if ((enemyPosition - closestPosition).Length() < 125.0f)
+				{
+					nearestDistance = distance;
 					aimPoint = closestPosition;
 				}
 			}

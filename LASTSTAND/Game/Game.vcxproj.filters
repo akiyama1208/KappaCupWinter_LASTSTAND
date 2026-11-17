@@ -46,6 +46,9 @@
     <Filter Include="system\HowToPlay">
       <UniqueIdentifier>{a260a447-8f3b-4ffa-b382-6f0171b8aeb6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="system\Enemy3">
+      <UniqueIdentifier>{69646b0a-aa2b-4574-be1a-db72f4942477}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -95,6 +98,9 @@
     <ClCompile Include="HowToPlay.cpp">
       <Filter>system\HowToPlay</Filter>
     </ClCompile>
+    <ClCompile Include="Enemy3.cpp">
+      <Filter>system\Enemy3</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -142,6 +148,9 @@
     </ClInclude>
     <ClInclude Include="HowToPlay.h">
       <Filter>system\HowToPlay</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy3.h">
+      <Filter>system\Enemy3</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
