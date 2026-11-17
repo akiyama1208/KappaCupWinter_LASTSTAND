@@ -1,16 +1,16 @@
 #pragma once
+
 class BackGround : public IGameObject
 {
 public:
-	BackGround() {}
-	~BackGround() {}
+    BackGround() {}
+    ~BackGround() {}
 
 public:
-	bool Start() override;
-	void Render(RenderContext& rc) override;
+    bool Start() override;
+    void Render(RenderContext& rc) override;
 
 private:
-	ModelRender m_modelRender;
-	PhysicsStaticObject m_pos;
-	PhysicsStaticObject physicsStaticObject;
+    ModelRender m_modelRender;
+    PhysicsStaticObject physicsStaticObject;
 };

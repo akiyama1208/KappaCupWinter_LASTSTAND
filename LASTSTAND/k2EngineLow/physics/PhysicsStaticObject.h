@@ -1,11 +1,11 @@
 /*!
  * @brief	静的オブジェクト。
  */
-
 #pragma once
 
 #include "physics/MeshCollider.h"
 #include "physics/RigidBody.h"
+#include "physics/BoxCollider.h"
 
 namespace nsK2EngineLow {
 	/// <summary>
@@ -28,6 +28,12 @@ namespace nsK2EngineLow {
 		/// <param name="worldMatrix">ワールド行列</param>
 		/// <param name="restitution">反発力</param>
 		void CreateFromModel(Model& model, const Matrix& worldMatrix, const float restitution = 0.0f);
+		
+		void CreateBox(
+			const Vector3& size,
+			const Vector3& position,
+			const float restitution = 0.0f);
+		
 		/// <summary>
 		/// 摩擦力を設定する。
 		/// </summary>
@@ -50,5 +56,7 @@ namespace nsK2EngineLow {
 	private:
 		MeshCollider m_meshCollider;		//メッシュコライダー。
 		RigidBody m_rigidBody;				//剛体。
+	
+		BoxCollider m_boxCollider;
 	};
 }
