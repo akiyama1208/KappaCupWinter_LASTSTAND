@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Bullet.h"
 #include "Enemy.h"
+#include "Boss.h"
 #include "physics/Physics.h"
 #include "sound/SoundSource.h"
 
@@ -187,6 +188,44 @@ void Bullet::Update()
             se->Play(false);
 
             enemy3->TakeDamage(25);
+            Deactivate();
+            return;
+        }
+    }
+
+    // Bossとの当たり判定
+    Boss* boss = FindGO<Boss>("boss");
+
+    if (boss != nullptr)
+    {
+        Vector3 bossPosition = boss->GetPosition();
+        bossPosition.y += 100.0f;
+
+        Vector3 toBoss = bossPosition - oldPosition;
+        Vector3 move = newPosition - oldPosition;
+
+        float moveLengthSq = move.Dot(move);
+        float t = 0.0f;
+
+        if (moveLengthSq > 0.0f)
+        {
+            t = toBoss.Dot(move) / moveLengthSq;
+
+            if (t < 0.0f) t = 0.0f;
+            if (t > 1.0f) t = 1.0f;
+        }
+
+        Vector3 closestPosition = oldPosition + move * t;
+
+        if ((bossPosition - closestPosition).Length() < 110.0f)
+        {
+            // 命中SEを再生
+            SoundSource* se = NewGO<SoundSource>(0);
+            se->Init(3);
+            se->SetVolume(3.5f);
+            se->Play(false);
+
+            boss->TakeDamage(25);
             Deactivate();
             return;
         }

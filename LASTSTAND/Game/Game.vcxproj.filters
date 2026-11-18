@@ -49,6 +49,9 @@
     <Filter Include="system\Enemy3">
       <UniqueIdentifier>{69646b0a-aa2b-4574-be1a-db72f4942477}</UniqueIdentifier>
     </Filter>
+    <Filter Include="system\Boss">
+      <UniqueIdentifier>{7c5a2e7a-3cf5-4894-8245-2437655fd2bc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -101,6 +104,9 @@
     <ClCompile Include="Enemy3.cpp">
       <Filter>system\Enemy3</Filter>
     </ClCompile>
+    <ClCompile Include="Boss.cpp">
+      <Filter>system\Boss</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -151,6 +157,9 @@
     </ClInclude>
     <ClInclude Include="Enemy3.h">
       <Filter>system\Enemy3</Filter>
+    </ClInclude>
+    <ClInclude Include="Boss.h">
+      <Filter>system\Boss</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

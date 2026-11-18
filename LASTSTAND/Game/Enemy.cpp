@@ -81,7 +81,7 @@ void Enemy::Update()
 
     // 追跡を開始する距離
     float distance = direction.Length();
-    float detectionRange = 1500.0f;
+    float detectionRange = 2000.0f;
 
     // 一定距離以内なら追いかける
     if (distance <= detectionRange && distance > 300.0f)

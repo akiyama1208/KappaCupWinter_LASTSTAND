@@ -29,7 +29,7 @@ bool Enemy3::Start()
     m_moveSpeed = Vector3(0.0f, 0.0f, 0.0f);
 
     // 通常移動速度
-    m_moveSpeedValue = 150.0f;
+    m_moveSpeedValue = 250.0f;
 
     // プレイヤーを取得
     m_player = FindGO<Player>("player");
@@ -152,7 +152,7 @@ void Enemy3::Move()
     }
 
     // 通常追跡
-    if (distance > 300.0f)
+    if (distance > 350.0f)
     {
         direction.Normalize();
         m_moveSpeed = direction * m_moveSpeedValue;

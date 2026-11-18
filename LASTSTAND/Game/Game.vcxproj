@@ -225,6 +225,7 @@
   <ItemGroup>
     <ClCompile Include="Aim.cpp" />
     <ClCompile Include="BackGround.cpp" />
+    <ClCompile Include="Boss.cpp" />
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Enemy2.cpp" />
@@ -249,6 +250,7 @@
   <ItemGroup>
     <ClInclude Include="Aim.h" />
     <ClInclude Include="BackGround.h" />
+    <ClInclude Include="Boss.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="Enemy2.h" />

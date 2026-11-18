@@ -3,6 +3,7 @@
 #include "Bullet.h"
 #include "Enemy.h"
 #include "Enemy2.h"
+#include "Boss.h"
 #include "Aim.h"
 #include "GameCamera.h"
 #include "physics/Physics.h"
@@ -411,6 +412,30 @@ void Player::Shoot()
 					cameraPosition + cameraDirection * distance;
 
 				if ((enemyPosition - closestPosition).Length() < 125.0f)
+				{
+					nearestDistance = distance;
+					aimPoint = closestPosition;
+				}
+			}
+		}
+
+		// Boss
+		Boss* boss = FindGO<Boss>("boss");
+
+		if (boss != nullptr)
+		{
+			Vector3 bossPosition = boss->GetPosition();
+			bossPosition.y += 100.0f;
+
+			Vector3 toBoss = bossPosition - cameraPosition;
+			float distance = toBoss.Dot(cameraDirection);
+
+			if (distance > 0.0f && distance < nearestDistance)
+			{
+				Vector3 closestPosition =
+					cameraPosition + cameraDirection * distance;
+
+				if ((bossPosition - closestPosition).Length() < 125.0f)
 				{
 					nearestDistance = distance;
 					aimPoint = closestPosition;

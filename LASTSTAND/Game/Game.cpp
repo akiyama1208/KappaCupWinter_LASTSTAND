@@ -6,6 +6,7 @@
 #include "Enemy.h"
 #include "Enemy2.h"
 #include "Enemy3.h"
+#include "Boss.h"
 #include "Bullet.h"
 #include "EnemyBullet.h"
 #include "EnemyBulletPool.h"
@@ -53,6 +54,9 @@ Game::~Game()
 
     Enemy3* enemy3 = FindGO<Enemy3>("enemy3");
     DeleteGO(enemy3);
+
+    Boss* boss = FindGO<Boss>("boss");
+    DeleteGO(boss);
 
     // プレイヤーを削除
     DeleteGO(m_player);
@@ -208,8 +212,29 @@ void Game::Update()
         }
     }
 
-    // Enemy3を倒したらゲームクリア
-    if (m_isEnemy3Spawned && m_enemy3 == nullptr)
+    // Enemy3を倒したらBossを出現させる
+    if (m_isEnemy3Spawned && m_enemy3 == nullptr &&
+        !m_isBossSpawned)
+    {
+        OutputDebugStringA("Boss Spawn Start\n");
+
+        m_boss = NewGO<Boss>(0, "boss");
+        m_isBossSpawned = true;
+
+        OutputDebugStringA("Boss Spawn End\n");
+    }
+
+    // Bossが倒されたか確認
+    if (m_isBossSpawned && m_boss != nullptr)
+    {
+        if (FindGO<Boss>("boss") == nullptr)
+        {
+            m_boss = nullptr;
+        }
+    }
+
+    // Bossを倒したらゲームクリア
+    if (m_isBossSpawned && m_boss == nullptr)
     {
         m_gameCamera->SetCameraActive(false);
         ShowCursor(TRUE);
